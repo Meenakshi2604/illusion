@@ -85,8 +85,11 @@ class _HomePageState extends State<HomePage> {
                               color: Colours.tertiaryColor,
                             ),
                             onPressed: () {
-                              setState(() {
-                                _muteAI = !_muteAI;
+                              Future.delayed(const Duration(milliseconds: 100),
+                                  () {
+                                setState(() {
+                                  _muteAI = !_muteAI;
+                                });
                               });
                             },
                           ),
