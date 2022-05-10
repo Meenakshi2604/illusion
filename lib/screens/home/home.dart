@@ -73,8 +73,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Center(
                       child: SizedBox(
-                        height: 140,
-                        width: 160,
+                        width: 140,
                         child: NeumorphicButton(
                           child: Text(
                             "Help me\nsee\n\n👁👁",
@@ -93,8 +92,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Center(
                       child: SizedBox(
-                        height: 140,
-                        width: 160,
+                        width: 140,
                         child: NeumorphicButton(
                           child: Text(
                             "Help me\nspeak\n\n🗣",
@@ -113,8 +111,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     Center(
                       child: SizedBox(
-                        height: 140,
-                        width: 160,
+                        width: 140,
                         child: NeumorphicButton(
                           child: Text(
                             "Help me\nhear\n\n👂",
