@@ -2,6 +2,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:illusion/main.dart';
+import 'package:illusion/screens/home/settings.dart';
+import 'package:illusion/screens/home/support.dart';
+
+import '../speech_to_text/stt_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,6 +25,9 @@ class _HomePageState extends State<HomePage> {
         child: Padding(
           padding: const EdgeInsets.all(15.0),
           child: Neumorphic(
+            style: const NeumorphicStyle(
+              depth: -5.0,
+            ),
             child: SizedBox(
               height: MediaQuery.of(context).size.height * 0.9,
               width: MediaQuery.of(context).size.width,
@@ -30,71 +37,39 @@ class _HomePageState extends State<HomePage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.max,
                   children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(20.0),
-                            child: Neumorphic(
-                              style: const NeumorphicStyle(
-                                depth: -5.0,
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Neumorphic(
+                        style: const NeumorphicStyle(
+                          depth: -5.0,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Text.rich(
+                            TextSpan(
+                              style: const TextStyle(
+                                fontSize: 40,
                               ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Text.rich(
-                                  TextSpan(
-                                    style: const TextStyle(
-                                      fontSize: 40,
-                                    ),
-                                    children: [
-                                      TextSpan(
-                                          text: "Illusion",
-                                          style: GoogleFonts.dancingScript(
-                                            color: Colours.primaryColor
-                                                .withOpacity(0.95),
-                                            fontWeight: FontWeight.bold,
-                                          )),
-                                      const TextSpan(
-                                        text: " is here to help you out ✨",
-                                        style: TextStyle(
-                                          fontSize: 28,
-                                          color: Colors.black87,
-                                        ),
-                                      ),
-                                    ],
+                              children: [
+                                TextSpan(
+                                    text: "Illusion",
+                                    style: GoogleFonts.dancingScript(
+                                      color: Colours.primaryColor
+                                          .withOpacity(0.95),
+                                      fontWeight: FontWeight.bold,
+                                    )),
+                                const TextSpan(
+                                  text: " is here to help you out ✨",
+                                  style: TextStyle(
+                                    fontSize: 28,
+                                    color: Colors.black87,
                                   ),
                                 ),
-                              ),
+                              ],
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(
-                            top: 40,
-                            right: 10,
-                          ),
-                          child: NeumorphicButton(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(
-                              _muteAI
-                                  ? CupertinoIcons.mic_off
-                                  : CupertinoIcons.mic,
-                              size: 30,
-                              color: Colours.tertiaryColor,
-                            ),
-                            onPressed: () {
-                              Future.delayed(const Duration(milliseconds: 100),
-                                  () {
-                                setState(() {
-                                  _muteAI = !_muteAI;
-                                });
-                              });
-                            },
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
                     Center(
                       child: SizedBox(
@@ -149,7 +124,13 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 24,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const SpeechToText()));
+                          },
                         ),
                       ),
                     ),
@@ -157,32 +138,68 @@ class _HomePageState extends State<HomePage> {
                       height: 30,
                     ),
                     Center(
-                        child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        NeumorphicButton(
-                          padding: const EdgeInsets.all(10),
-                          child: Icon(
-                            CupertinoIcons.settings,
-                            size: 30,
-                            color: Colours.tertiaryColor,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          NeumorphicButton(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              _muteAI
+                                  ? CupertinoIcons.mic_off
+                                  : CupertinoIcons.mic,
+                              size: 30,
+                              color: Colours.tertiaryColor,
+                            ),
+                            onPressed: () {
+                              Future.delayed(const Duration(milliseconds: 100),
+                                  () {
+                                setState(() {
+                                  _muteAI = !_muteAI;
+                                });
+                              });
+                            },
                           ),
-                          onPressed: () {},
-                        ),
-                        const SizedBox(
-                          width: 20,
-                        ),
-                        NeumorphicButton(
-                          padding: const EdgeInsets.all(10),
-                          child: Icon(
-                            CupertinoIcons.flag,
-                            size: 30,
-                            color: Colours.tertiaryColor,
+                          const SizedBox(
+                            width: 20,
                           ),
-                          onPressed: () {},
-                        ),
-                      ],
-                    )),
+                          NeumorphicButton(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              CupertinoIcons.settings,
+                              size: 30,
+                              color: Colours.tertiaryColor,
+                            ),
+                            onPressed: () {
+                              Future.delayed(const Duration(milliseconds: 200),
+                                  () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => const SettingsPage());
+                              });
+                            },
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          NeumorphicButton(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              CupertinoIcons.question_circle,
+                              size: 30,
+                              color: Colours.tertiaryColor,
+                            ),
+                            onPressed: () {
+                              Future.delayed(const Duration(milliseconds: 200),
+                                  () {
+                                showModalBottomSheet(
+                                    context: context,
+                                    builder: (context) => const SupportPage());
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                     const SizedBox(
                       height: 30,
                     ),
