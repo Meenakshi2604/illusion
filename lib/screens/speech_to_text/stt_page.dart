@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 
-class SpeechToText extends StatefulWidget {
-  const SpeechToText({Key? key}) : super(key: key);
+class SpeechToTextPage extends StatefulWidget {
+  const SpeechToTextPage({Key? key}) : super(key: key);
 
   @override
-  _SpeechToTextState createState() => _SpeechToTextState();
+  _SpeechToTextPageState createState() => _SpeechToTextPageState();
 }
 
-class _SpeechToTextState extends State<SpeechToText> {
+class _SpeechToTextPageState extends State<SpeechToTextPage> {
   @override
   Widget build(BuildContext context) {
     return const Scaffold(
       body: Center(
-        child: Text("SPEECH"),
+        child: Text("REMOVE THIS WIDGET"),
       ),
     );
   }

@@ -4,6 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:illusion/main.dart';
 import 'package:illusion/screens/home/settings.dart';
 import 'package:illusion/screens/home/support.dart';
+import 'package:illusion/screens/image_captioning/camera_page.dart';
+import 'package:illusion/screens/text_to_speech/tts_page.dart';
 
 import '../speech_to_text/stt_page.dart';
 
@@ -83,7 +85,16 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 24,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Future.delayed(const Duration(milliseconds: 100),
+                                () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CameraPage()));
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -102,7 +113,16 @@ class _HomePageState extends State<HomePage> {
                               fontSize: 24,
                             ),
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Future.delayed(const Duration(milliseconds: 100),
+                                () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const TextToSpeechPage()));
+                            });
+                          },
                         ),
                       ),
                     ),
@@ -122,11 +142,14 @@ class _HomePageState extends State<HomePage> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        const SpeechToText()));
+                            Future.delayed(const Duration(milliseconds: 100),
+                                () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SpeechToTextPage()));
+                            });
                           },
                         ),
                       ),
