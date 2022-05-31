@@ -46,7 +46,7 @@ class _HomePageState extends State<HomePage> {
                           depth: -5.0,
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(15.0),
                           child: Text.rich(
                             TextSpan(
                               style: const TextStyle(
