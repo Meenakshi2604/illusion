@@ -1,5 +1,6 @@
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:illusion/screens/text_to_speech/tts_page.dart';
 //import 'package:flutter/material.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt1;
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
@@ -31,7 +32,7 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: AvatarGlow(
         animate: !muteAI,
-        glowColor: Colors.pink,
+        glowColor: Colors.indigoAccent,
         endRadius: 50.0,
         duration: const Duration(milliseconds: 2000),
         repeatPauseDuration: const Duration(milliseconds: 100),
@@ -42,6 +43,7 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
             size: 30,
             color: Colors.white54,
           ),
+          backgroundColor: muteAI ? Colours.primaryColor: Colors.blueGrey,
           onPressed: () {
             _listen();
           },
@@ -82,6 +84,7 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
     if (!muteAI) {
       setState(() {
         muteAI = true;
+        text = "Please press the microphone button to start speaking";
       });
       _speech.stop();
     } else {
@@ -99,12 +102,11 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
           muteAI = false;
         });
 
-        _speech.listen(
-            onResult: (val) {
-              setState(() {
-                text = val.recognizedWords;
-              });
-            });
+        _speech.listen(onResult: (val) {
+          setState(() {
+            text = val.recognizedWords;
+          });
+        });
       }
     }
   }
