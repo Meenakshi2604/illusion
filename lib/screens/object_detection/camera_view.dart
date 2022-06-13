@@ -5,18 +5,13 @@ import 'package:illusion/screens/object_detection/camera_view_singleton.dart';
 import 'package:illusion/services/classifier.dart';
 import 'package:illusion/services/isolate_utils.dart';
 import 'package:illusion/services/recognition.dart';
-import 'package:illusion/services/stats.dart';
 
 /// [CameraView] sends each frame for inference
 class CameraView extends StatefulWidget {
   /// Callback to pass results after inference to [HomeView]
   final Function(List<Recognition> recognitions) resultsCallback;
-
-  /// Callback to inference stats to [HomeView]
-  final Function(Stats stats) statsCallback;
-
   /// Constructor
-  const CameraView(this.resultsCallback, this.statsCallback, {Key? key}) : super(key: key);
+  const CameraView(this.resultsCallback, {Key? key}) : super(key: key);
   @override
   _CameraViewState createState() => _CameraViewState();
 }
@@ -115,8 +110,6 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
         predicting = true;
       });
 
-      var uiThreadTimeStart = DateTime.now().millisecondsSinceEpoch;
-
       // Data to be passed to inference isolate
       var isolateData = IsolateData(
           cameraImage, classifier.interpreter!.address, classifier.labels!);
@@ -128,15 +121,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       /// perform inference in separate isolate
       Map<String, dynamic> inferenceResults = await inference(isolateData);
 
-      var uiThreadInferenceElapsedTime =
-          DateTime.now().millisecondsSinceEpoch - uiThreadTimeStart;
-
       // pass results to HomeView
       widget.resultsCallback(inferenceResults["recognitions"]);
-
-      // pass stats to HomeView
-      widget.statsCallback((inferenceResults["stats"] as Stats)
-        ..totalElapsedTime = uiThreadInferenceElapsedTime);
 
       // set predicting to false to allow new frames
       if(mounted) {

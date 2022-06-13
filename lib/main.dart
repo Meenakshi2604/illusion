@@ -1,8 +1,11 @@
+import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:illusion/screens/home/home.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  AlanVoice.setLogLevel("all");
   runApp(const MyApp());
 }
 

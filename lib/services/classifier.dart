@@ -1,3 +1,4 @@
+import 'dart:developer' as dev;
 import 'dart:math';
 import 'dart:ui';
 import 'package:flutter/material.dart';
@@ -5,8 +6,6 @@ import 'package:illusion/services/recognition.dart';
 import 'package:image/image.dart' as image_lib;
 import 'package:tflite_flutter/tflite_flutter.dart';
 import 'package:tflite_flutter_helper/tflite_flutter_helper.dart';
-
-import 'stats.dart';
 
 /// Classifier
 class Classifier {
@@ -65,18 +64,16 @@ class Classifier {
         _outputTypes!.add(tensor.type);
       }
     } catch (e) {
-      print("Error while creating interpreter: $e");
+      dev.log("Error while creating interpreter: $e");
     }
   }
 
   /// Loads labels from assets
   void loadLabels({List<String>? labels}) async {
     try {
-      _labels =
-          labels ?? await FileUtil.loadLabels("assets/" + label);
-
+      _labels = labels ?? await FileUtil.loadLabels("assets/" + label);
     } catch (e) {
-      print("Error while loading labels: $e");
+      dev.log("Error while loading labels: $e");
     }
   }
 
@@ -84,32 +81,25 @@ class Classifier {
   TensorImage getProcessedImage(TensorImage inputImage) {
     padSize = max(inputImage.height, inputImage.width);
     imageProcessor ??= ImageProcessorBuilder()
-          .add(ResizeWithCropOrPadOp(padSize!, padSize!))
-          .add(ResizeOp(inputSize, inputSize, ResizeMethod.BILINEAR))
-          .build();
+        .add(ResizeWithCropOrPadOp(padSize!, padSize!))
+        .add(ResizeOp(inputSize, inputSize, ResizeMethod.BILINEAR))
+        .build();
     inputImage = imageProcessor!.process(inputImage);
     return inputImage;
   }
 
   /// Runs object detection on the input image
   Map<String, dynamic>? predict(image_lib.Image image) {
-    var predictStartTime = DateTime.now().millisecondsSinceEpoch;
-
     if (_interpreter == null) {
-      print("Interpreter not initialized");
+      dev.log("Interpreter not initialized");
       return null;
     }
-
-    var preProcessStart = DateTime.now().millisecondsSinceEpoch;
 
     // Create TensorImage from image
     TensorImage inputImage = TensorImage.fromImage(image);
 
     // Pre-process TensorImage
     inputImage = getProcessedImage(inputImage);
-
-    var preProcessElapsedTime =
-        DateTime.now().millisecondsSinceEpoch - preProcessStart;
 
     // TensorBuffers for output tensors
     TensorBuffer outputLocations = TensorBufferFloat(_outputShapes![0]);
@@ -129,13 +119,8 @@ class Classifier {
       3: numLocations.buffer,
     };
 
-    var inferenceTimeStart = DateTime.now().millisecondsSinceEpoch;
-
     // run inference
     _interpreter!.runForMultipleInputs(inputs, outputs);
-
-    var inferenceTimeElapsed =
-        DateTime.now().millisecondsSinceEpoch - inferenceTimeStart;
 
     // Maximum number of results to show
     int resultsCount = min(numResults, numLocations.getIntValue(0));
@@ -168,8 +153,8 @@ class Classifier {
         // inverse of rect
         // [locations] corresponds to the image size 300 X 300
         // inverseTransformRect transforms it our [inputImage]
-        Rect transformedRect = imageProcessor!.inverseTransformRect(
-            locations[i], image.height, image.width);
+        Rect transformedRect = imageProcessor!
+            .inverseTransformRect(locations[i], image.height, image.width);
 
         recognitions.add(
           Recognition(i, label, score, transformedRect),
@@ -177,15 +162,8 @@ class Classifier {
       }
     }
 
-    var predictElapsedTime =
-        DateTime.now().millisecondsSinceEpoch - predictStartTime;
-
     return {
       "recognitions": recognitions,
-      "stats": Stats(
-          totalPredictTime: predictElapsedTime,
-          inferenceTime: inferenceTimeElapsed,
-          preProcessingTime: preProcessElapsedTime)
     };
   }
 

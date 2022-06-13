@@ -1,14 +1,13 @@
+import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:illusion/main.dart';
 import 'package:illusion/screens/home/settings.dart';
 import 'package:illusion/screens/home/support.dart';
-import 'package:illusion/screens/object_detection/camera_page.dart';
+import 'package:illusion/screens/object_detection/obj_det.dart';
 import 'package:illusion/screens/speech_to_text/stt_page.dart';
 import 'package:illusion/screens/text_to_speech/tts_page.dart';
-
-import '../object_detection/home_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -19,6 +18,32 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _muteAI = false;
+
+  _HomePageState() {
+    _initAlanButton();
+  }
+
+  void _initAlanButton() {
+    AlanVoice.addButton(
+        "36c8aaca9e477e818548a82b73a2c0012e956eca572e1d8b807a3e2338fdd0dc/stage"
+    );
+
+    AlanVoice.onCommand.add((command) {
+      debugPrint("got new command ${command.toString()}");
+      var commandName = command.data["command"] ?? "";
+      if (commandName == "showAlert") {
+        /// handle command "showAlert"
+      }
+    });
+
+    AlanVoice.onEvent.add((event) {
+      debugPrint("got new event ${event.data.toString()}");
+    });
+
+    AlanVoice.onButtonState.add((state) {
+      debugPrint("got new button state ${state.name}");
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +118,7 @@ class _HomePageState extends State<HomePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const HomeView()));
+                                          const ObjDetPage()));
                             });
                           },
                         ),

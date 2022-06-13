@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:image/image.dart' as image_lib;
@@ -74,6 +75,6 @@ class ImageUtils {
     final appPath = appDir.path;
     final fileOnDevice = File('$appPath/out$i.jpg');
     await fileOnDevice.writeAsBytes(jpeg, flush: true);
-    print('Saved $appPath/out$i.jpg');
+    log('Saved $appPath/out$i.jpg');
   }
 }
