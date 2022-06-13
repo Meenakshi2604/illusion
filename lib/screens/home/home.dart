@@ -4,9 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:illusion/main.dart';
 import 'package:illusion/screens/home/settings.dart';
 import 'package:illusion/screens/home/support.dart';
-import 'package:illusion/screens/image_captioning/camera_page.dart';
+import 'package:illusion/screens/object_detection/camera_page.dart';
 import 'package:illusion/screens/speech_to_text/stt_page.dart';
 import 'package:illusion/screens/text_to_speech/tts_page.dart';
+
+import '../object_detection/home_view.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -17,7 +19,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _muteAI = false;
-  static int option = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +93,7 @@ class _HomePageState extends State<HomePage> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          const CameraPage()));
+                                          const HomeView()));
                             });
                           },
                         ),
