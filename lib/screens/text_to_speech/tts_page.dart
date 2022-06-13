@@ -13,14 +13,14 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   final FlutterTts flutterTts = FlutterTts();
 
   String userPost = 'Type something and press the play button';
+  speak() async {
+    await flutterTts.setLanguage("en-US");
+    await flutterTts.setPitch(1.3);
+    await flutterTts.speak(_textController.text);
+  }
+
   @override
   Widget build(BuildContext context) {
-    speak() async {
-      await flutterTts.setLanguage("en-US");
-      await flutterTts.setPitch(1);
-      await flutterTts.speak("hello there how are you");
-    }
-
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(20.0),
@@ -44,16 +44,18 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
               decoration: InputDecoration(
                   border: const OutlineInputBorder(),
                   suffixIcon: IconButton(
-                    icon: const Icon(Icons.play_arrow_rounded),
-                    onPressed: () => speak(), //{
-                    // setState(() {
-                    //   userPost = _textController.text;
-                    //   if (userPost == '') {
-                    //     userPost =
-                    //         'Type something and press the play button';
-                    //   }
-                    // });
-                  )),
+                      icon: const Icon(Icons.play_arrow_rounded),
+                      onPressed: () {
+                        //=> speak();
+                        setState(() {
+                          userPost = _textController.text;
+                          speak();
+                          if (userPost == '') {
+                            userPost =
+                                'Type something and press the play button';
+                          }
+                        });
+                      })),
             )
           ],
         ),
