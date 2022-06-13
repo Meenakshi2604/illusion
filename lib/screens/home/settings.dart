@@ -8,10 +8,42 @@ class SettingsPage extends StatefulWidget {
 }
 
 class _SettingsPageState extends State<SettingsPage> {
+
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text("SETTINGS"),
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("Dark Mode"),
+            ToggleButtons(children: [
+              Icon(Icons.toggle_off_outlined)
+            ], isSelected: [true])
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("Voice Assistant"),
+            ToggleButtons(children: [
+              Icon(Icons.record_voice_over)
+            ], isSelected: [true])
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("Terms and Conditions"),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Text("Privacy Policy"),
+          ],
+        ),
+      ],
     );
   }
 }
