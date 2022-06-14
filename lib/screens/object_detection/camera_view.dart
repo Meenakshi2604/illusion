@@ -1,6 +1,9 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:isolate';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:illusion/screens/object_detection/camera_view_singleton.dart';
 import 'package:illusion/services/classifier.dart';
 import 'package:illusion/services/isolate_utils.dart';
@@ -10,6 +13,7 @@ import 'package:illusion/services/recognition.dart';
 class CameraView extends StatefulWidget {
   /// Callback to pass results after inference to [HomeView]
   final Function(List<Recognition> recognitions) resultsCallback;
+
   /// Constructor
   const CameraView(this.resultsCallback, {Key? key}) : super(key: key);
   @override
@@ -32,9 +36,16 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   /// Instance of [IsolateUtils]
   IsolateUtils? isolateUtils;
 
+  List<String?> uniqueRecognitions = [];
+
+  final FlutterTts flutterTts = FlutterTts();
+
   @override
   void initState() {
     super.initState();
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      uniqueRecognitions.clear();
+    });
     initStateAsync();
   }
 
@@ -60,10 +71,9 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     cameras = await availableCameras();
 
     // cameras[0] for rear-camera
-    if(cameras!.isNotEmpty) {
-      cameraController =
-          CameraController(
-              cameras![0], ResolutionPreset.high, enableAudio: false);
+    if (cameras!.isNotEmpty) {
+      cameraController = CameraController(cameras![0], ResolutionPreset.high,
+          enableAudio: false);
     }
 
     cameraController!.initialize().then((_) async {
@@ -121,14 +131,22 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       /// perform inference in separate isolate
       Map<String, dynamic> inferenceResults = await inference(isolateData);
 
+      for (Recognition recognition in inferenceResults['recognitions']) {
+        if (!uniqueRecognitions.contains(recognition.label)) {
+          flutterTts.awaitSpeakCompletion(true);
+          uniqueRecognitions.add(recognition.label);
+          await flutterTts.speak(recognition.label!);
+        }
+      }
+
       // pass results to HomeView
-      widget.resultsCallback(inferenceResults["recognitions"]);
+      widget.resultsCallback(inferenceResults['recognitions']);
 
       // set predicting to false to allow new frames
-      if(mounted) {
+      if (mounted) {
         setState(() {
-        predicting = false;
-      });
+          predicting = false;
+        });
       }
     }
   }
