@@ -20,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   bool _muteAI = false;
 
   _HomePageState() {
-    _initAlanButton();
+    //_initAlanButton();
   }
 
   void _initAlanButton() {
