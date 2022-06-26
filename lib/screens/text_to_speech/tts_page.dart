@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TextToSpeechPage extends StatefulWidget {
   const TextToSpeechPage({Key? key}) : super(key: key);
@@ -16,6 +17,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   speak() async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.3);
+    await flutterTts.setVolume(1.0);
     await flutterTts.speak(_textController.text);
   }
 
@@ -34,7 +36,9 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
               child: Text(
                 userPost,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 35),
+                style: GoogleFonts.poppins(
+                  fontSize: 35,
+                ),
               ),
             ))),
 
