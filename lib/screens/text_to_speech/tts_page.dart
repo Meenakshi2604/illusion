@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:illusion/main.dart';
+import 'package:lottie/lottie.dart';
 
 class TextToSpeechPage extends StatefulWidget {
   const TextToSpeechPage({Key? key}) : super(key: key);
@@ -11,7 +11,6 @@ class TextToSpeechPage extends StatefulWidget {
 
 class _TextToSpeechPageState extends State<TextToSpeechPage> {
   final _textController = TextEditingController();
-  final FlutterTts flutterTts = FlutterTts();
 
   String userPost = 'Type something and press the play button';
   speak() async {
@@ -25,47 +24,65 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Neumorphic(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                //display text
-                Expanded(
-                    child: Container(
-                        child: Center(
+        body: Neumorphic(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Spacer(),
+
+              Center(
+                  child: Lottie.asset(
+                "assets/robot.json",
+                height: 200,
+              )),
+
+              //display text
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Center(
                   child: Text(
                     userPost,
+                    overflow: TextOverflow.clip,
                     textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 24),
+                    style: const TextStyle(fontSize: 24),
                   ),
-                ))),
+                ),
+              ),
 
-                //user input text field
-                Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: TextField(
-                    controller: _textController,
-                    decoration: InputDecoration(
-                        border: const OutlineInputBorder(),
-                        suffixIcon: IconButton(
-                            icon: const Icon(Icons.play_arrow_rounded),
-                            onPressed: () {
-                              //=> speak();
-                              setState(() {
-                                userPost = _textController.text;
-                                speak();
-                                if (userPost == '') {
-                                  userPost =
-                                      'Type something and press the play button';
-                                }
-                              });
-                            })),
-                  ),
-                )
-              ],
-            ),
+              const Spacer(),
+
+              //user input text field
+              Padding(
+                padding: const EdgeInsets.all(30.0),
+                child: TextField(
+                  controller: _textController,
+                  decoration: InputDecoration(
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide(color: Colours.primaryColor),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colours.primaryColor)),
+                      suffixIcon: IconButton(
+                          icon: const Icon(
+                            Icons.play_arrow_rounded,
+                            color: Colours.primaryColor,
+                          ),
+                          onPressed: () {
+                            //=> speak();
+                            setState(() {
+                              userPost = _textController.text;
+                              speak();
+                              if (userPost == '') {
+                                userPost =
+                                    'Type something and press the play button';
+                              }
+                            });
+                          })),
+                ),
+              ),
+
+              const Spacer(),
+            ],
           ),
         ),
       ),
