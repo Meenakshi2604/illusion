@@ -74,7 +74,7 @@ class _HomePageState extends State<HomePage> {
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
                             child: Text("Illusion ✨",
-                                style: GoogleFonts.courgette(
+                                style: GoogleFonts.lato(
                                   color: Colours.primaryColor.withOpacity(0.95),
                                   fontWeight: FontWeight.bold,
                                   fontSize: 50,
@@ -84,7 +84,73 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 20,
+                      height: 10,
+                    ),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          NeumorphicButton(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              _muteAI
+                                  ? CupertinoIcons.mic_off
+                                  : CupertinoIcons.mic,
+                              size: 30,
+                              color: Colours.tertiaryColor,
+                            ),
+                            onPressed: () {
+                              Future.delayed(const Duration(milliseconds: 100),
+                                      () {
+                                    setState(() {
+                                      _muteAI = !_muteAI;
+                                    });
+                                  });
+                            },
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          NeumorphicButton(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              CupertinoIcons.settings,
+                              size: 30,
+                              color: Colours.tertiaryColor,
+                            ),
+                            onPressed: () {
+                              Future.delayed(const Duration(milliseconds: 200),
+                                      () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) => const SettingsPage());
+                                  });
+                            },
+                          ),
+                          const SizedBox(
+                            width: 20,
+                          ),
+                          NeumorphicButton(
+                            padding: const EdgeInsets.all(10),
+                            child: Icon(
+                              CupertinoIcons.question_circle,
+                              size: 30,
+                              color: Colours.tertiaryColor,
+                            ),
+                            onPressed: () {
+                              Future.delayed(const Duration(milliseconds: 200),
+                                      () {
+                                    showModalBottomSheet(
+                                        context: context,
+                                        builder: (context) => const SupportPage());
+                                  });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 70,
                     ),
                     const Center(
                       child: Text(
@@ -97,7 +163,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     const SizedBox(
-                      height: 80,
+                      height: 50,
                     ),
                     Center(
                       child: SizedBox(
@@ -184,72 +250,6 @@ class _HomePageState extends State<HomePage> {
                                 },
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          NeumorphicButton(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(
-                              _muteAI
-                                  ? CupertinoIcons.mic_off
-                                  : CupertinoIcons.mic,
-                              size: 30,
-                              color: Colours.tertiaryColor,
-                            ),
-                            onPressed: () {
-                              Future.delayed(const Duration(milliseconds: 100),
-                                  () {
-                                setState(() {
-                                  _muteAI = !_muteAI;
-                                });
-                              });
-                            },
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          NeumorphicButton(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(
-                              CupertinoIcons.settings,
-                              size: 30,
-                              color: Colours.tertiaryColor,
-                            ),
-                            onPressed: () {
-                              Future.delayed(const Duration(milliseconds: 200),
-                                  () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => const SettingsPage());
-                              });
-                            },
-                          ),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          NeumorphicButton(
-                            padding: const EdgeInsets.all(10),
-                            child: Icon(
-                              CupertinoIcons.question_circle,
-                              size: 30,
-                              color: Colours.tertiaryColor,
-                            ),
-                            onPressed: () {
-                              Future.delayed(const Duration(milliseconds: 200),
-                                  () {
-                                showModalBottomSheet(
-                                    context: context,
-                                    builder: (context) => const SupportPage());
-                              });
-                            },
                           ),
                         ],
                       ),
