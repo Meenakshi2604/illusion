@@ -92,7 +92,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               Flexible(
                                   child: Image.asset(
-                                "assets/logo.png",
+                                "assets/icon.png",
                                 height: size.height * 0.07,
                               ))
                             ],
