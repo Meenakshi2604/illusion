@@ -9,7 +9,6 @@ import 'package:illusion/screens/object_detection/obj_det.dart';
 import 'package:illusion/screens/speech_to_text/stt_page.dart';
 import 'package:illusion/screens/text_to_speech/tts_page.dart';
 import 'package:lottie/lottie.dart';
-import 'package:speech_to_text/speech_to_text.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -30,7 +29,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 3000), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       flutterTts.speak("Hey there! How can I help you?").then((value) {
         Future.delayed(const Duration(milliseconds: 2000), () {
           _listen();
@@ -46,6 +45,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colours.backgroundColor,
       body: Neumorphic(
@@ -75,12 +76,27 @@ class _HomePageState extends State<HomePage> {
                       child: Center(
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
-                          child: Text("Illusion ✨",
-                              style: TextStyle(
-                                color: Colours.primaryColor.withOpacity(0.95),
-                                fontWeight: FontWeight.bold,
-                                fontSize: 50,
-                              )),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Illusion",
+                                style: TextStyle(
+                                  color: Colours.primaryColor.withOpacity(0.95),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 50,
+                                ),
+                              ),
+                              const SizedBox(
+                                width: 10,
+                              ),
+                              Flexible(
+                                  child: Image.asset(
+                                "assets/logo.png",
+                                height: size.height * 0.07,
+                              ))
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -88,7 +104,7 @@ class _HomePageState extends State<HomePage> {
                   Center(
                       child: Lottie.asset(
                     "assets/robot.json",
-                    height: 200,
+                    height: size.height * 0.2,
                   )),
                   Center(
                     child: Padding(
@@ -96,34 +112,34 @@ class _HomePageState extends State<HomePage> {
                         left: 30,
                         right: 30,
                       ),
-                      child: _text.isEmpty
-                          ? const SizedBox(
-                              height: 54,
-                            )
-                          : Text(
-                              _text,
-                              overflow: TextOverflow.clip,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.black45,
-                                fontSize: 22,
-                              ),
-                            ),
+                      child: SizedBox(
+                        height: size.height * 0.06,
+                        child: Text(
+                          _text,
+                          overflow: TextOverflow.visible,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black45,
+                            fontSize: size.height * 0.0225,
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 50,
+                  SizedBox(
+                    height: size.height * 0.05,
                   ),
                   Center(
                     child: SizedBox(
-                      width: 140,
+                      height: size.height * 0.15,
+                      width: size.width * 0.35,
                       child: NeumorphicButton(
                         child: Text(
                           "Help me\nsee\n\n👁👁",
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             color: Colours.tertiaryColor,
-                            fontSize: 24,
+                            fontSize: size.height * 0.025,
                           ),
                         ),
                         onPressed: () {
@@ -146,8 +162,8 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 30,
+                  SizedBox(
+                    height: size.height * 0.03,
                   ),
                   Padding(
                     padding: const EdgeInsets.only(
@@ -159,14 +175,15 @@ class _HomePageState extends State<HomePage> {
                       children: [
                         Center(
                           child: SizedBox(
-                            width: 140,
+                            height: size.height * 0.15,
+                            width: size.width * 0.35,
                             child: NeumorphicButton(
                               child: Text(
                                 "Help me\nspeak\n\n🗣",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colours.tertiaryColor,
-                                  fontSize: 24,
+                                  fontSize: size.height * 0.025,
                                 ),
                               ),
                               onPressed: () {
@@ -194,14 +211,15 @@ class _HomePageState extends State<HomePage> {
                         ),
                         Center(
                           child: SizedBox(
-                            width: 140,
+                            height: size.height * 0.15,
+                            width: size.width * 0.35,
                             child: NeumorphicButton(
                               child: Text(
                                 "Help me\nhear\n\n👂",
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   color: Colours.tertiaryColor,
-                                  fontSize: 24,
+                                  fontSize: size.height * 0.025,
                                 ),
                               ),
                               onPressed: () {
@@ -230,8 +248,8 @@ class _HomePageState extends State<HomePage> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 70,
+                  SizedBox(
+                    height: size.height * 0.07,
                   ),
                   Center(
                     child: Row(
@@ -242,7 +260,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(10),
                           child: Icon(
                             CupertinoIcons.settings,
-                            size: 30,
+                            size: size.height * 0.03,
                             color: Colours.tertiaryColor,
                           ),
                           onPressed: () {
@@ -263,7 +281,9 @@ class _HomePageState extends State<HomePage> {
                           child: AvatarGlow(
                             animate: !_isMute,
                             glowColor: Colors.indigoAccent,
-                            endRadius: _isMute ? 22.5 : 25,
+                            endRadius: _isMute
+                                ? size.height * 0.0225
+                                : size.height * 0.025,
                             repeatPauseDuration:
                                 const Duration(milliseconds: 100),
                             repeat: true,
@@ -272,7 +292,9 @@ class _HomePageState extends State<HomePage> {
                               _isMute
                                   ? CupertinoIcons.mic_off
                                   : CupertinoIcons.mic,
-                              size: _isMute ? 30 : 33,
+                              size: _isMute
+                                  ? size.height * 0.03
+                                  : size.height * 0.033,
                               color: Colours.tertiaryColor,
                             ),
                           ),
@@ -306,7 +328,7 @@ class _HomePageState extends State<HomePage> {
                           padding: const EdgeInsets.all(10),
                           child: Icon(
                             CupertinoIcons.question_circle,
-                            size: 30,
+                            size: size.height * 0.03,
                             color: Colours.tertiaryColor,
                           ),
                           onPressed: () {
@@ -322,7 +344,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                   const SizedBox(
-                    height: 30,
+                    height: 50,
                   ),
                 ],
               ),
@@ -348,8 +370,8 @@ class _HomePageState extends State<HomePage> {
                 });
               }
               flutterTts.speak(errorTexts[0]).then((value) {
+                flutterStt.stop();
                 Future.delayed(const Duration(milliseconds: 2000), () {
-                  flutterStt.stop();
                   _listen();
                 });
               });
@@ -371,8 +393,8 @@ class _HomePageState extends State<HomePage> {
               if (val.finalResult) {
                 Future.delayed(const Duration(milliseconds: 1000), () {
                   flutterTts.speak(val.recognizedWords).then((value) {
+                    flutterStt.stop();
                     Future.delayed(const Duration(milliseconds: 1000), () {
-                      flutterStt.stop();
                       _listen();
                     });
                   });

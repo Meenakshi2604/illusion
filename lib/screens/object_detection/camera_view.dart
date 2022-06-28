@@ -112,6 +112,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       return Container();
     }
 
+    Size size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -121,11 +123,12 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
             child: Column(
               children: [
                 AspectRatio(
-                    aspectRatio: 0.65, child: CameraPreview(cameraController!)),
+                    aspectRatio: 1.4 * (size.width / size.height),
+                    child: CameraPreview(cameraController!)),
                 Center(
                     child: Lottie.asset(
                   "assets/robot.json",
-                  height: 200,
+                  height: size.height * 0.2,
                 )),
                 Center(
                   child: Padding(
@@ -148,8 +151,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
                           ),
                   ),
                 ),
-                const SizedBox(
-                  height: 30,
+                SizedBox(
+                  height: size.height * 0.05,
                 ),
               ],
             ),

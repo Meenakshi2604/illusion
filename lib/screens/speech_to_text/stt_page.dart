@@ -24,6 +24,8 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return WillPopScope(
       onWillPop: () async {
         flutterStt.errorListener = errorListener;
@@ -70,7 +72,7 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
                       Center(
                           child: Lottie.asset(
                         "assets/robot.json",
-                        height: 200,
+                        height: size.height * 0.2,
                       )),
                     Padding(
                       padding: const EdgeInsets.only(

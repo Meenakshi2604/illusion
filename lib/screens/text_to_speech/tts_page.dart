@@ -22,6 +22,8 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
+
     return SafeArea(
       child: Scaffold(
         body: Neumorphic(
@@ -33,7 +35,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
               Center(
                   child: Lottie.asset(
                 "assets/robot.json",
-                height: 200,
+                height: size.height * 0.2,
               )),
 
               //display text
