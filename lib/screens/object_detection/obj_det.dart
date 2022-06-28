@@ -40,21 +40,26 @@ class _ObjDetPageState extends State<ObjDetPage> {
     if (results == null) {
       return Container();
     }
-    return Stack(
-      children: results
-          .map((e) => BoxWidget(
-                result: e,
-              ))
-          .toList(),
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Stack(
+          children: results
+              .map((e) => BoxWidget(
+                    result: e,
+                  ))
+              .toList(),
+        ),
+      ),
     );
   }
 
   /// Callback to get inference results from [CameraView]
   void resultsCallback(List<Recognition> results) {
-    if(mounted) {
+    if (mounted) {
       setState(() {
-      this.results = results;
-    });
+        this.results = results;
+      });
     }
   }
 }

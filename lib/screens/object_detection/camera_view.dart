@@ -1,13 +1,13 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:isolate';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_tts/flutter_tts.dart';
+import 'package:illusion/main.dart';
 import 'package:illusion/screens/object_detection/camera_view_singleton.dart';
 import 'package:illusion/services/classifier.dart';
 import 'package:illusion/services/isolate_utils.dart';
 import 'package:illusion/services/recognition.dart';
+import 'package:lottie/lottie.dart';
 
 /// [CameraView] sends each frame for inference
 class CameraView extends StatefulWidget {
@@ -38,7 +38,14 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
   List<String?> uniqueRecognitions = [];
 
-  final FlutterTts flutterTts = FlutterTts();
+  String _text = "Let's see what's in front of you";
+  List<String> list = [
+    "Detected ",
+    "Found ",
+    "There's a ",
+    "Identified ",
+    "Recognized "
+  ];
 
   @override
   void initState() {
@@ -105,7 +112,54 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
       return Container();
     }
 
-    return CameraPreview(cameraController!);
+    Size size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                AspectRatio(
+                    aspectRatio: 1.4 * (size.width / size.height),
+                    child: CameraPreview(cameraController!)),
+                Center(
+                    child: Lottie.asset(
+                  "assets/robot.json",
+                  height: size.height * 0.2,
+                )),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 30,
+                      right: 30,
+                    ),
+                    child: _text.isEmpty
+                        ? const SizedBox(
+                            height: 54,
+                          )
+                        : Text(
+                            _text,
+                            overflow: TextOverflow.clip,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.black45,
+                              fontSize: 22,
+                            ),
+                          ),
+                  ),
+                ),
+                SizedBox(
+                  height: size.height * 0.05,
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   /// Callback to receive each frame [CameraImage] perform inference on it
@@ -135,7 +189,13 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
         if (!uniqueRecognitions.contains(recognition.label)) {
           flutterTts.awaitSpeakCompletion(true);
           uniqueRecognitions.add(recognition.label);
-          await flutterTts.speak(recognition.label!);
+          list.shuffle();
+          if (mounted) {
+            setState(() {
+              _text = list[0] + recognition.label!;
+            });
+          }
+          await flutterTts.speak(_text);
         }
       }
 

@@ -2,8 +2,9 @@ import 'dart:developer';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:illusion/main.dart';
-import 'package:speech_to_text/speech_to_text.dart' as stt1;
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:lottie/lottie.dart';
+import 'package:speech_to_text/speech_recognition_error.dart';
 
 class SpeechToTextPage extends StatefulWidget {
   const SpeechToTextPage({Key? key}) : super(key: key);
@@ -13,68 +14,85 @@ class SpeechToTextPage extends StatefulWidget {
 }
 
 class _SpeechToTextPageState extends State<SpeechToTextPage> {
-  bool muteAI = true;
-  late stt1.SpeechToText _speech;
-  List<String> texts = ["Please press the microphone button to start speaking"];
-
-  @override
-  void initState() {
-    super.initState();
-    _speech = stt1.SpeechToText();
-  }
+  bool _muteAI = true;
+  void Function(SpeechRecognitionError)? errorListener =
+      flutterStt.errorListener;
+  final ScrollController _scrollController = ScrollController();
+  final List<String> _texts = [
+    "Please press the microphone button to start speaking"
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colours.backgroundColor,
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: AvatarGlow(
-        animate: !muteAI,
-        glowColor: Colors.indigoAccent,
-        endRadius: 50.0,
-        duration: const Duration(milliseconds: 2000),
-        repeatPauseDuration: const Duration(milliseconds: 100),
-        repeat: true,
-        child: FloatingActionButton(
-          child: Icon(
-            muteAI ? CupertinoIcons.mic_off : CupertinoIcons.mic,
-            size: 30,
-            color: Colors.white54,
+    Size size = MediaQuery.of(context).size;
+
+    return WillPopScope(
+      onWillPop: () async {
+        flutterStt.errorListener = errorListener;
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: Colours.backgroundColor,
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: AvatarGlow(
+          animate: !_muteAI,
+          glowColor: Colors.indigoAccent,
+          endRadius: 50.0,
+          duration: const Duration(milliseconds: 2000),
+          repeatPauseDuration: const Duration(milliseconds: 100),
+          repeat: true,
+          child: FloatingActionButton(
+            child: Icon(
+              _muteAI ? CupertinoIcons.mic_off : CupertinoIcons.mic,
+              size: 30,
+              color: Colors.white54,
+            ),
+            backgroundColor: _muteAI
+                ? Colours.primaryColor.withOpacity(.5)
+                : Colours.primaryColor.withOpacity(.35),
+            onPressed: () {
+              _listen();
+            },
           ),
-          backgroundColor: muteAI ? Colours.primaryColor : Colors.blueGrey,
-          onPressed: () {
-            _listen();
-          },
         ),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(15.0),
+        body: SafeArea(
           child: Neumorphic(
-            child: SizedBox(
+            child: Padding(
+              padding: const EdgeInsets.only(
+                bottom: 120,
+              ),
               child: ListView.builder(
-                itemCount: texts.length,
+                reverse: true,
+                controller: _scrollController,
+                itemCount: _texts.length,
                 physics: const BouncingScrollPhysics(),
-                itemBuilder: (context, index) => Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 10,
-                    bottom: 10,
-                  ),
-                  child: Neumorphic(
-                    style: const NeumorphicStyle(depth: -3.0),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        texts[index],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          fontSize: 24,
+                itemBuilder: (context, index) => Column(
+                  children: [
+                    if (index == _texts.length - 1)
+                      Center(
+                          child: Lottie.asset(
+                        "assets/robot.json",
+                        height: size.height * 0.2,
+                      )),
+                    Padding(
+                      padding: const EdgeInsets.only(
+                        left: 20,
+                        right: 20,
+                        top: 10,
+                        bottom: 10,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          _texts[index],
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 24,
+                          ),
                         ),
                       ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ),
@@ -85,62 +103,77 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   }
 
   void _listen() async {
-    if (!muteAI) {
+    if (!_muteAI) {
       if (mounted) {
         setState(() {
-          muteAI = true;
-          texts.add("Please press the microphone button to start speaking");
+          _muteAI = true;
+          _texts.remove("Listening...");
+          _texts.add("Please press the microphone button to start speaking");
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.decelerate,
+          );
         });
       }
-      _speech.stop();
+      flutterStt.stop();
     } else {
       if (mounted) {
         setState(() {
-          if (texts
+          if (_texts
               .remove("Please press the microphone button to start speaking")) {
-            texts.clear();
+            _texts.clear();
           }
-          texts.add("Listening...");
+          _texts.add("Listening...");
+          _scrollController.animateTo(
+            _scrollController.position.maxScrollExtent,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.decelerate,
+          );
         });
       }
 
-      bool available = await _speech.initialize(
-        onStatus: (val) => log('onStatus: $val'),
-        onError: (val) {
-          log('onError: $val');
-          if (val.errorMsg == "error_no_match") {
-            muteAI = true;
-            texts.remove("Listening...");
-            _speech.stop();
-            _listen();
-          }
-        },
-      );
+      flutterStt.errorListener = (val) {
+        log('onError: $val');
+        if (val.errorMsg != 'error_busy') {
+          _muteAI = true;
+          _texts.remove("Listening...");
+          flutterStt.stop();
+          _listen();
+        }
+      };
+
+      bool available = await flutterStt.initialize();
 
       if (available) {
         if (mounted) {
           setState(() {
-            muteAI = false;
+            _muteAI = false;
           });
         }
 
         String text = "";
 
-        _speech.listen(
+        flutterStt.listen(
             onSoundLevelChange: (sound) {},
             onResult: (val) {
               if (mounted) {
                 setState(() {
-                  texts.remove("Listening...");
-                  texts.remove(text);
+                  _texts.remove("Listening...");
+                  _texts.remove(text);
                   text = val.recognizedWords;
-                  texts.add(text);
+                  _texts.add(text);
+                  _scrollController.animateTo(
+                    _scrollController.position.maxScrollExtent,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.decelerate,
+                  );
                 });
               }
 
               if (val.finalResult) {
-                muteAI = true;
-                _speech.stop();
+                _muteAI = true;
+                flutterStt.stop();
                 _listen();
               }
             });

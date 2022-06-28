@@ -1,11 +1,14 @@
-import 'package:alan_voice/alan_voice.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:illusion/screens/home/home.dart';
+import 'package:speech_to_text/speech_to_text.dart';
+
+final SpeechToText flutterStt = SpeechToText();
+final FlutterTts flutterTts = FlutterTts();
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  AlanVoice.setLogLevel("all");
   runApp(const MyApp());
 }
 
@@ -18,11 +21,13 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Illusion',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        textTheme: GoogleFonts.latoTextTheme(
-          Theme.of(context).textTheme,
-        ),
-      ),
+          primarySwatch: Colors.blue,
+          textTheme: GoogleFonts.abelTextTheme(
+            Theme.of(context).textTheme,
+          ),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colours.primaryColor,
+          )),
       home: const HomePage(),
     );
   }
