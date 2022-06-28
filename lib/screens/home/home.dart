@@ -30,9 +30,9 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(milliseconds: 1000), () {
+    Future.delayed(const Duration(milliseconds: 3000), () {
       flutterTts.speak("Hey there! How can I help you?").then((value) {
-        Future.delayed(const Duration(milliseconds: 500), () {
+        Future.delayed(const Duration(milliseconds: 1500), () {
           _listen();
         });
       });
