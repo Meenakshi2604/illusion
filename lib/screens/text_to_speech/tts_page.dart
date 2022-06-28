@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -19,49 +20,57 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
     await flutterTts.setPitch(1.3);
     await flutterTts.setVolume(1.0);
     await flutterTts.speak(_textController.text);
+    _textController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            //display text
-            Expanded(
-                child: Container(
-                    child: Center(
-              child: Text(
-                userPost,
-                textAlign: TextAlign.center,
-                style: GoogleFonts.poppins(
+    return SafeArea(
+      child: Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Neumorphic(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                //display text
+                Expanded(
+                    child: Container(
+                        child: Center(
+                  child: Text(
+                    userPost,
+                    textAlign: TextAlign.center,
+                    style:  GoogleFonts.poppins(
                   fontSize: 35,
                 ),
-              ),
-            ))),
+                  ),
+                ))),
 
-            //user input text field
-            TextField(
-              controller: _textController,
-              decoration: InputDecoration(
-                  border: const OutlineInputBorder(),
-                  suffixIcon: IconButton(
-                      icon: const Icon(Icons.play_arrow_rounded),
-                      onPressed: () {
-                        //=> speak();
-                        setState(() {
-                          userPost = _textController.text;
-                          speak();
-                          if (userPost == '') {
-                            userPost =
-                                'Type something and press the play button';
-                          }
-                        });
-                      })),
-            )
-          ],
+                //user input text field
+                Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                            icon: const Icon(Icons.play_arrow_rounded),
+                            onPressed: () {
+                              //=> speak();
+                              setState(() {
+                                userPost = _textController.text;
+                                speak();
+                                if (userPost == '') {
+                                  userPost =
+                                      'Type something and press the play button';
+                                }
+                              });
+                            })),
+                  ),
+                )
+              ],
+            ),
+          ),
         ),
       ),
     );
