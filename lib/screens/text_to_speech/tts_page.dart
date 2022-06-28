@@ -25,26 +25,31 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Scaffold(
-        body: Neumorphic(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(
-                  child: Lottie.asset(
-                "assets/robot.json",
-                height: size.height * 0.2,
-              )),
+    return WillPopScope(
+      onWillPop: () async {
+        flutterTts.stop();
+        return true;
+      },
+      child: SafeArea(
+        child: Scaffold(
+          body: Neumorphic(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                    child: Lottie.asset(
+                  "assets/robot.json",
+                  height: size.height * 0.2,
+                )),
 
-              //display text
-              Flexible(
-                child: Center(
-                  child: Container(
-                    height: 500,
-                    child: Padding(
-                      padding: EdgeInsets.all(20.0),
-                      child: SingleChildScrollView(
+                //display text
+                Flexible(
+                  child: Center(
+                    child: Container(
+                      height: size.height * 0.5,
+                      child: Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: SingleChildScrollView(
                           child: Text(
                             userPost,
                             overflow: TextOverflow.visible,
@@ -52,41 +57,43 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                             style: const TextStyle(fontSize: 24),
                           ),
                         ),
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              //user input text field
-              Padding(
-                padding: const EdgeInsets.all(30.0),
-                child: TextField(
-                  controller: _textController,
-                  decoration: InputDecoration(
-                      border: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colours.primaryColor),
-                      ),
-                      focusedBorder: const OutlineInputBorder(
-                          borderSide: BorderSide(color: Colours.primaryColor)),
-                      suffixIcon: IconButton(
-                          icon: const Icon(
-                            Icons.play_arrow_rounded,
-                            color: Colours.primaryColor,
-                          ),
-                          onPressed: () {
-                            //=> speak();
-                            setState(() {
-                              userPost = _textController.text;
-                              speak();
-                              if (userPost == '') {
-                                userPost =
-                                    'Type something and press the play button';
-                              }
-                            });
-                          })),
+                //user input text field
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: TextField(
+                    controller: _textController,
+                    decoration: InputDecoration(
+                        border: const OutlineInputBorder(
+                          borderSide: BorderSide(color: Colours.primaryColor),
+                        ),
+                        focusedBorder: const OutlineInputBorder(
+                            borderSide:
+                                BorderSide(color: Colours.primaryColor)),
+                        suffixIcon: IconButton(
+                            icon: const Icon(
+                              Icons.play_arrow_rounded,
+                              color: Colours.primaryColor,
+                            ),
+                            onPressed: () {
+                              //=> speak();
+                              setState(() {
+                                userPost = _textController.text;
+                                speak();
+                                if (userPost == '') {
+                                  userPost =
+                                      'Type something and press the play button';
+                                }
+                              });
+                            })),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
