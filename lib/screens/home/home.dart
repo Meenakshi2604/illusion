@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     Future.delayed(const Duration(milliseconds: 3000), () {
       flutterTts.speak("Hey there! How can I help you?").then((value) {
-        Future.delayed(const Duration(milliseconds: 1500), () {
+        Future.delayed(const Duration(milliseconds: 2000), () {
           _listen();
         });
       });
@@ -348,7 +348,7 @@ class _HomePageState extends State<HomePage> {
                 });
               }
               flutterTts.speak(errorTexts[0]).then((value) {
-                Future.delayed(const Duration(milliseconds: 1000), () {
+                Future.delayed(const Duration(milliseconds: 2000), () {
                   flutterStt.stop();
                   _listen();
                 });
