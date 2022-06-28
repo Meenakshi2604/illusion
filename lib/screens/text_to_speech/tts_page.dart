@@ -31,8 +31,6 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Spacer(),
-
               Center(
                   child: Lottie.asset(
                 "assets/robot.json",
@@ -40,19 +38,24 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
               )),
 
               //display text
-              Padding(
-                padding: const EdgeInsets.all(20.0),
+              Flexible(
                 child: Center(
-                  child: Text(
-                    userPost,
-                    overflow: TextOverflow.clip,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 24),
+                  child: Container(
+                    height: 500,
+                    child: Padding(
+                      padding: EdgeInsets.all(20.0),
+                      child: SingleChildScrollView(
+                          child: Text(
+                            userPost,
+                            overflow: TextOverflow.visible,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(fontSize: 24),
+                          ),
+                        ),
+                    ),
                   ),
                 ),
               ),
-
-              const Spacer(),
 
               //user input text field
               Padding(
@@ -83,8 +86,6 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                           })),
                 ),
               ),
-
-              const Spacer(),
             ],
           ),
         ),
