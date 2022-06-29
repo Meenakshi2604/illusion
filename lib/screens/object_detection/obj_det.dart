@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:illusion/main.dart';
+import 'package:illusion/screens/navbar/navbar.dart';
 import 'package:illusion/screens/object_detection/box_widget.dart';
 import 'package:illusion/services/recognition.dart';
 import 'camera_view.dart';
@@ -15,23 +17,23 @@ class _ObjDetPageState extends State<ObjDetPage> {
   /// Results to draw bounding boxes
   List<Recognition>? results;
 
-  /// Scaffold Key
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       backgroundColor: Colors.black,
-      body: Stack(
-        children: <Widget>[
-          // Camera View
-          CameraView(resultsCallback),
+      body: NavBarState.selectedIndex == 1
+          ? Stack(
+              children: <Widget>[
+                // Camera View
+                CameraView(resultsCallback),
 
-          // Bounding boxes
-          boundingBoxes(results),
-        ],
-      ),
+                // Bounding boxes
+                //boundingBoxes(results),
+              ],
+            )
+          : Container(
+              color: Colours.backgroundColor,
+            ),
     );
   }
 
@@ -61,24 +63,5 @@ class _ObjDetPageState extends State<ObjDetPage> {
         this.results = results;
       });
     }
-  }
-}
-
-/// Row for one Stats field
-class StatsRow extends StatelessWidget {
-  final String left;
-  final String right;
-
-  const StatsRow(this.left, this.right, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(left), Text(right)],
-      ),
-    );
   }
 }
