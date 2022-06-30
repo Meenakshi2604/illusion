@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:ui';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   bool _isMute = false;
   bool _flag = false;
+  double _height = 0;
   String _text = "Hey there! 👋\nHow can I help you?";
   List<String> errorTexts = [
     "I'm sorry, can you speak again?",
@@ -124,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(
-                  height: size.height * 0.05,
+                  height: size.height * 0.01,
                 ),
                 Center(
                   child: AvatarGlow(
@@ -148,23 +150,46 @@ class _HomePageState extends State<HomePage> {
                           _isMute = !_isMute;
                         });
 
-                        if (_isMute) {
-                          if (mounted) {
-                            setState(() {
-                              _text = "Hey there! 👋\nHow can I help you?";
-                            });
-                          }
-                          flutterTts.stop();
-                          flutterStt.stop();
-                        } else {
-                          _listen();
-                        }
+                        _listen();
                       },
                     ),
                   ),
                 ),
-                const SizedBox(
-                  height: 50,
+                SizedBox(
+                  height: size.height * 0.15,
+                ),
+                if (!_isMute)
+                  CustomPaint(
+                    painter: SoundPainter(
+                      path: drawPath(_height),
+                    ),
+                  ),
+                if (!_isMute)
+                  CustomPaint(
+                    painter: SoundPainter(
+                      path: drawPath(_height / 2),
+                    ),
+                  ),
+                if (!_isMute)
+                  CustomPaint(
+                    painter: SoundPainter(
+                      path: drawPath(-_height / 2),
+                    ),
+                  ),
+                if (!_isMute)
+                  CustomPaint(
+                    painter: SoundPainter(
+                      path: drawPath(0.0),
+                    ),
+                  ),
+                if (!_isMute)
+                  CustomPaint(
+                    painter: SoundPainter(
+                      path: drawPath(-_height),
+                    ),
+                  ),
+                SizedBox(
+                  height: size.height * 0.05,
                 ),
               ],
             ),
@@ -180,6 +205,10 @@ class _HomePageState extends State<HomePage> {
         finalTimeout: Duration(seconds: 3),
         onStatus: (val) => log('onStatus: $val'),
         onError: (val) {
+          if (mounted)
+            setState(() {
+              _height = 0;
+            });
           log('onError: $val');
           if (val.errorMsg != 'error_busy') {
             Future.delayed(const Duration(milliseconds: 1000), () {
@@ -199,43 +228,126 @@ class _HomePageState extends State<HomePage> {
       );
 
       if (available) {
-        flutterStt.listen(
-            //TODO - Frequency graph
-            onSoundLevelChange: (sound) {},
-            onResult: (val) async {
-              if (mounted) {
-                setState(() {
-                  _text = val.recognizedWords;
-                });
-              }
+        flutterStt.listen(onSoundLevelChange: (sound) {
+          if (mounted && sound != 10 && sound != -2)
+            setState(() {
+              _height = sound * 15;
+            });
+        }, onResult: (val) async {
+          if (mounted) {
+            setState(() {
+              _text = val.recognizedWords;
+            });
+          }
 
-              if (val.finalResult) {
-                if (_text.toLowerCase().contains("see") ||
-                    _text.toLowerCase().contains("help me see")) {
-                  NavBarState.controller.jumpToTab(1);
-                } else if (_text.toLowerCase().contains("speak") ||
-                    _text.toLowerCase().contains("help me speak")) {
-                  NavBarState.controller.jumpToTab(2);
-                } else if (_text.toLowerCase().contains("hear") ||
-                    _text.toLowerCase().contains("help me hear")) {
-                  NavBarState.controller.jumpToTab(3);
-                } else {
-                  Future.delayed(const Duration(milliseconds: 1000), () {
-                    errorTexts.shuffle();
-                    if (mounted) {
-                      setState(() {
-                        _text = errorTexts[0];
-                      });
-                    }
-                    flutterTts.speak(errorTexts[0]).then((value) {
-                      flutterStt.stop();
-                      _listen();
-                    });
+          if (val.finalResult) {
+            if (mounted)
+              setState(() {
+                _height = 0;
+              });
+
+            if (_text.toLowerCase().contains("see") ||
+                _text.toLowerCase().contains("detect") ||
+                _text.toLowerCase().contains("visual") ||
+                _text.toLowerCase().contains("blind")) {
+              NavBarState.controller.jumpToTab(1);
+              NavBarState.changer.notify();
+            } else if (_text.toLowerCase().contains("hear") ||
+                _text.toLowerCase().contains("listen") ||
+                _text.toLowerCase().contains("deaf")) {
+              NavBarState.controller.jumpToTab(2);
+            } else if (_text.toLowerCase().contains("speak") ||
+                _text.toLowerCase().contains("say") ||
+                _text.toLowerCase().contains("talk") ||
+                _text.toLowerCase().contains("speech") ||
+                _text.toLowerCase().contains("dumb")) {
+              NavBarState.controller.jumpToTab(3);
+            } else if (_text.toLowerCase().contains("stop") ||
+                _text.toLowerCase().contains("mute") ||
+                _text.toLowerCase().contains("end") ||
+                _text.toLowerCase().contains("quit") ||
+                _text.toLowerCase().contains("bye") ||
+                _text.toLowerCase().contains("no")) {
+              if (mounted)
+                setState(() {
+                  _isMute = true;
+                  flutterStt.stop();
+                });
+            } else if (_text.toLowerCase().contains("thank")) {
+              flutterTts
+                  .speak("Illusion is always at your service!")
+                  .then((value) {
+                flutterStt.stop();
+                _listen();
+              });
+            } else if (_text.toLowerCase().contains("hi") ||
+                _text.toLowerCase().contains("hey") ||
+                _text.toLowerCase().contains("hello")) {
+              flutterTts.speak("Hey there! How can I help you!").then((value) {
+                flutterStt.stop();
+                _listen();
+              });
+            } else if (_text.toLowerCase().contains("ok") ||
+                _text.toLowerCase().contains("yes")) {
+              flutterStt.stop();
+              _listen(); ||
+          _text.toLowerCase().contains("bye")
+            } else {
+              Future.delayed(const Duration(milliseconds: 1000), () {
+                errorTexts.shuffle();
+                if (mounted) {
+                  setState(() {
+                    _text = errorTexts[0];
                   });
                 }
-              }
-            });
+                flutterTts.speak(errorTexts[0]).then((value) {
+                  flutterStt.stop();
+                  _listen();
+                });
+              });
+            }
+          }
+        });
       }
+    } else {
+      if (mounted) {
+        setState(() {
+          _text = "Hey there! 👋\nHow can I help you?";
+          _height = 0;
+        });
+      }
+      flutterTts.stop();
+      flutterStt.stop();
     }
   }
+
+  Path drawPath(height) {
+    final width = MediaQuery.of(context).size.width;
+    final path = Path();
+    final segmentWidth = width / 3 / 2;
+    path.moveTo(0, 0);
+    path.cubicTo(
+        segmentWidth, 0, 2 * segmentWidth, height, 3 * segmentWidth, height);
+    path.cubicTo(
+        4 * segmentWidth, height, 5 * segmentWidth, 0, 6 * segmentWidth, 0);
+    return path;
+  }
+}
+
+class SoundPainter extends CustomPainter {
+  Path path;
+  SoundPainter({required this.path});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    // paint the line
+    final paint = Paint()
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
+    canvas.drawPath(path, paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => true;
 }
