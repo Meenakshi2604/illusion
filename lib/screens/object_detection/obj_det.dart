@@ -16,6 +16,8 @@ class ObjDetPage extends StatefulWidget {
 class _ObjDetPageState extends State<ObjDetPage> {
   /// Results to draw bounding boxes
   List<Recognition>? results;
+  bool flag = false;
+  GlobalKey key = GlobalKey();
 
   @override
   void initState() {
@@ -30,12 +32,22 @@ class _ObjDetPageState extends State<ObjDetPage> {
   }
 
   void _listener() {
-    if (NavBarState.controller.index == 1 && mounted) setState(() {});
+    if (NavBarState.controller.index == 1 && mounted)
+      setState(() {
+        flag = true;
+      });
+    else if (flag) {
+      setState(() {
+        key = GlobalKey();
+        flag = false;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: key,
       backgroundColor: Colors.black,
       body: NavBarState.controller.index == 1
           ? Stack(

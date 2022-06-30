@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:ui';
 import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -103,7 +102,7 @@ class _HomePageState extends State<HomePage> {
                 Center(
                     child: Lottie.asset(
                   "assets/robot.json",
-                  height: size.height * 0.2,
+                  height: size.height * 0.25,
                 )),
                 Center(
                   child: Padding(
@@ -156,7 +155,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                 ),
                 SizedBox(
-                  height: size.height * 0.15,
+                  height: size.height * 0.12,
                 ),
                 if (!_isMute)
                   CustomPaint(
@@ -231,7 +230,7 @@ class _HomePageState extends State<HomePage> {
         flutterStt.listen(onSoundLevelChange: (sound) {
           if (mounted && sound != 10 && sound != -2)
             setState(() {
-              _height = sound * 15;
+              _height = sound * 10;
             });
         }, onResult: (val) async {
           if (mounted) {
@@ -315,7 +314,6 @@ class _HomePageState extends State<HomePage> {
           _height = 0;
         });
       }
-      flutterTts.stop();
       flutterStt.stop();
     }
   }
