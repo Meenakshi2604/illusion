@@ -3,7 +3,6 @@ import 'dart:isolate';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:illusion/main.dart';
-import 'package:illusion/screens/home/home.dart';
 import 'package:illusion/screens/object_detection/camera_view_singleton.dart';
 import 'package:illusion/services/classifier.dart';
 import 'package:illusion/services/isolate_utils.dart';
@@ -59,7 +58,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   }
 
   void initStateAsync() async {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     // Spawn a new isolate
     isolateUtils = IsolateUtils();
@@ -238,7 +237,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     cameraController!.dispose();
     super.dispose();
   }

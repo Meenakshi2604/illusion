@@ -15,6 +15,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   bool _isReady = false;
 
   String userPost = '';
+
   speak() async {
     await flutterTts.setLanguage("en-US");
     await flutterTts.setPitch(1.3);
@@ -151,4 +152,4 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
       ),
     );
   }
-} //end
+}
