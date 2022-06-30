@@ -4,9 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:illusion/main.dart';
-import 'package:illusion/screens/object_detection/obj_det.dart';
-import 'package:illusion/screens/speech_to_text/stt_page.dart';
-import 'package:illusion/screens/text_to_speech/tts_page.dart';
+import 'package:illusion/screens/navbar/navbar.dart';
 import 'package:lottie/lottie.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,6 +16,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isMute = false;
+  bool _flag = false;
   String _text = "Hey there! 👋\nHow can I help you?";
   List<String> errorTexts = [
     "I'm sorry, can you speak again?",
@@ -28,18 +27,38 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    NavBarState.changer.addListener(_listener);
     Future.delayed(const Duration(milliseconds: 1500), () {
       flutterTts.speak("Hey there! How can I help you?").then((value) {
-        Future.delayed(const Duration(milliseconds: 2000), () {
-          _listen();
-        });
+        _listen();
       });
     });
   }
 
   @override
   void dispose() {
+    NavBarState.changer.removeListener(_listener);
     super.dispose();
+  }
+
+  void _listener() {
+    if (NavBarState.controller.index == 0) {
+      if (mounted)
+        setState(() {
+          _text = "Hey there! 👋\nHow can I help you?";
+          if (_flag) {
+            _isMute = false;
+            _flag = false;
+          }
+        });
+      flutterTts.speak("Hey there! How can I help you?").then((value) {
+        _listen();
+      });
+    } else if (NavBarState.controller.index == 2 && !_isMute && mounted)
+      setState(() {
+        _isMute = true;
+        _flag = true;
+      });
   }
 
   @override
@@ -172,9 +191,7 @@ class _HomePageState extends State<HomePage> {
               }
               flutterTts.speak(errorTexts[0]).then((value) {
                 flutterStt.stop();
-                Future.delayed(Duration(milliseconds: 1500), () {
-                  _listen();
-                });
+                _listen();
               });
             });
           }
@@ -183,7 +200,7 @@ class _HomePageState extends State<HomePage> {
 
       if (available) {
         flutterStt.listen(
-            //TODO
+            //TODO - Frequency graph
             onSoundLevelChange: (sound) {},
             onResult: (val) async {
               if (mounted) {
@@ -195,47 +212,13 @@ class _HomePageState extends State<HomePage> {
               if (val.finalResult) {
                 if (_text.toLowerCase().contains("see") ||
                     _text.toLowerCase().contains("help me see")) {
-                  setState(() {
-                    _isMute = true;
-                    _text = "Hey there! 👋\nHow can I help you?";
-                  });
-
-                  await flutterTts.stop();
-                  await flutterStt.stop();
-
-                  //TODO
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const ObjDetPage()));
+                  NavBarState.controller.jumpToTab(1);
                 } else if (_text.toLowerCase().contains("speak") ||
                     _text.toLowerCase().contains("help me speak")) {
-                  setState(() {
-                    _isMute = true;
-                    _text = "Hey there! 👋\nHow can I help you?";
-                  });
-
-                  await flutterTts.stop();
-                  await flutterStt.stop();
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const TextToSpeechPage()));
+                  NavBarState.controller.jumpToTab(2);
                 } else if (_text.toLowerCase().contains("hear") ||
                     _text.toLowerCase().contains("help me hear")) {
-                  setState(() {
-                    _isMute = true;
-                    _text = "Hey there! 👋\nHow can I help you?";
-                  });
-
-                  await flutterTts.stop();
-                  await flutterStt.stop();
-
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SpeechToTextPage()));
+                  NavBarState.controller.jumpToTab(3);
                 } else {
                   Future.delayed(const Duration(milliseconds: 1000), () {
                     errorTexts.shuffle();
@@ -246,9 +229,7 @@ class _HomePageState extends State<HomePage> {
                     }
                     flutterTts.speak(errorTexts[0]).then((value) {
                       flutterStt.stop();
-                      Future.delayed(const Duration(milliseconds: 2000), () {
-                        _listen();
-                      });
+                      _listen();
                     });
                   });
                 }

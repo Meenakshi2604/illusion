@@ -18,10 +18,26 @@ class _ObjDetPageState extends State<ObjDetPage> {
   List<Recognition>? results;
 
   @override
+  void initState() {
+    super.initState();
+    NavBarState.changer.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    NavBarState.changer.removeListener(_listener);
+    super.dispose();
+  }
+
+  void _listener() {
+    if (NavBarState.controller.index == 1 && mounted) setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: NavBarState.selectedIndex == 1
+      body: NavBarState.controller.index == 1
           ? Stack(
               children: <Widget>[
                 // Camera View

@@ -3,8 +3,8 @@ import 'package:avatar_glow/avatar_glow.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:illusion/main.dart';
+import 'package:illusion/screens/navbar/navbar.dart';
 import 'package:lottie/lottie.dart';
-import 'package:speech_to_text/speech_recognition_error.dart';
 
 class SpeechToTextPage extends StatefulWidget {
   const SpeechToTextPage({Key? key}) : super(key: key);
@@ -14,12 +14,34 @@ class SpeechToTextPage extends StatefulWidget {
 }
 
 class _SpeechToTextPageState extends State<SpeechToTextPage> {
-  bool _muteAI = true;
-  void Function(SpeechRecognitionError)? errorListener =
-      flutterStt.errorListener;
+  bool _isMute = true;
   final ScrollController _scrollController = ScrollController();
   List<String> _texts = [];
-  String _text = "Press the microphone button to start listening";
+
+  @override
+  void initState() {
+    super.initState();
+    flutterTts.speak("Press the microphone button to start listening");
+    NavBarState.changer.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    NavBarState.changer.removeListener(_listener);
+    super.dispose();
+  }
+
+  void _listener() {
+    if (NavBarState.controller.index == 2) {
+      _listen();
+      if (_isMute)
+        flutterTts.speak("Press the microphone button to start listening");
+    } else if (NavBarState.controller.index == 0) {
+      setState(() {
+        _isMute = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +55,7 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
           bottom: 20,
         ),
         child: AvatarGlow(
-          animate: !_muteAI,
+          animate: !_isMute,
           glowColor: Colors.indigoAccent,
           endRadius: size.height * 0.05,
           duration: const Duration(milliseconds: 2000),
@@ -41,14 +63,18 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
           repeat: true,
           child: FloatingActionButton(
             child: Icon(
-              _muteAI ? CupertinoIcons.mic_off : CupertinoIcons.mic,
+              _isMute ? CupertinoIcons.mic_off : CupertinoIcons.mic,
               size: size.height * 0.03,
               color: Colors.white54,
             ),
-            backgroundColor: _muteAI
+            backgroundColor: _isMute
                 ? Colours.primaryColor.withOpacity(.5)
                 : Colours.primaryColor.withOpacity(.35),
             onPressed: () {
+              if (mounted)
+                setState(() {
+                  _isMute = !_isMute;
+                });
               _listen();
             },
           ),
@@ -81,7 +107,9 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
                       bottom: 20,
                     ),
                     child: Text(
-                      _text,
+                      _isMute
+                          ? "Press the microphone button to start listening"
+                          : "Listening...",
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: size.height * 0.020,
@@ -131,23 +159,9 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   }
 
   void _listen() async {
-    if (!_muteAI) {
+    if (!_isMute) {
       if (mounted) {
         setState(() {
-          _muteAI = true;
-          _text = "Press the microphone button to start listening";
-          _scrollController.animateTo(
-            _scrollController.position.maxScrollExtent,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.decelerate,
-          );
-        });
-      }
-      flutterStt.stop();
-    } else {
-      if (mounted) {
-        setState(() {
-          _text = "Listening...";
           _scrollController.animateTo(
             _scrollController.position.maxScrollExtent,
             duration: const Duration(milliseconds: 300),
@@ -159,7 +173,6 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
       flutterStt.errorListener = (val) {
         log('onError: $val');
         if (val.errorMsg != 'error_busy') {
-          _muteAI = true;
           flutterStt.stop();
           _listen();
         }
@@ -168,12 +181,6 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
       bool available = await flutterStt.initialize();
 
       if (available) {
-        if (mounted) {
-          setState(() {
-            _muteAI = false;
-          });
-        }
-
         String text = "";
 
         flutterStt.listen(
@@ -193,12 +200,13 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
               }
 
               if (val.finalResult) {
-                _muteAI = true;
                 flutterStt.stop();
                 _listen();
               }
             });
       }
+    } else {
+      flutterStt.stop();
     }
   }
 }

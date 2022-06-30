@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:illusion/main.dart';
+import 'package:illusion/screens/navbar/navbar.dart';
 import 'package:lottie/lottie.dart';
 
 class TextToSpeechPage extends StatefulWidget {
@@ -19,6 +20,24 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
     await flutterTts.setPitch(1.3);
     await flutterTts.setVolume(1.0);
     await flutterTts.speak(userPost);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    flutterTts.speak('Type something and press the play button to speak');
+    NavBarState.changer.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    NavBarState.changer.removeListener(_listener);
+    super.dispose();
+  }
+
+  void _listener() {
+    if (NavBarState.controller.index == 3)
+      flutterTts.speak('Type something and press the play button to speak');
   }
 
   @override
@@ -50,7 +69,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                         height: size.height * 0.15,
                       ),
                       Text(
-                        'Type something and press the play button',
+                        'Type something and press the play button to speak',
                         overflow: TextOverflow.visible,
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -118,10 +137,6 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                                         _textController.clear();
                                         _isReady = false;
                                         speak();
-                                        if (userPost == '') {
-                                          userPost =
-                                              'Type something and press the play button';
-                                        }
                                       });
                                     }
                                   : null)),

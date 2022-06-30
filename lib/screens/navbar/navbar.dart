@@ -16,9 +16,10 @@ class NavBar extends StatefulWidget {
 }
 
 class NavBarState extends State<NavBar> {
-  PersistentTabController _controller =
+  static PersistentTabController controller =
       PersistentTabController(initialIndex: 0);
-  static int selectedIndex = 0;
+  static bool muteHome = false;
+  static Changer changer = Changer();
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +27,7 @@ class NavBarState extends State<NavBar> {
       color: Colours.backgroundColor,
       child: PersistentTabView(
         context,
-        controller: _controller,
+        controller: controller,
         margin: EdgeInsets.all(20),
         padding: NavBarPadding.all(10),
         screens: _buildScreens(),
@@ -57,10 +58,7 @@ class NavBarState extends State<NavBar> {
         onItemSelected: (index) {
           flutterTts.stop();
           flutterStt.stop();
-          if (mounted)
-            setState(() {
-              selectedIndex = index;
-            });
+          changer.notify();
         },
       ),
     );
@@ -109,5 +107,11 @@ class NavBarState extends State<NavBar> {
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];
+  }
+}
+
+class Changer extends ChangeNotifier {
+  void notify() {
+    notifyListeners();
   }
 }
