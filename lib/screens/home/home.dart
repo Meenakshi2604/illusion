@@ -290,8 +290,7 @@ class _HomePageState extends State<HomePage> {
             } else if (_text.toLowerCase().contains("ok") ||
                 _text.toLowerCase().contains("yes")) {
               flutterStt.stop();
-              _listen(); ||
-          _text.toLowerCase().contains("bye")
+              _listen();
             } else {
               Future.delayed(const Duration(milliseconds: 1000), () {
                 errorTexts.shuffle();
