@@ -21,6 +21,7 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
   @override
   void initState() {
     super.initState();
+    flutterTts.stop();
     flutterTts.speak("Press the microphone button to start listening");
     NavBarState.changer.addListener(_listener);
   }
@@ -33,9 +34,12 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
 
   void _listener() {
     if (NavBarState.controller.index == 2) {
+      if (_isMute) {
+        Future.delayed(Duration(milliseconds: 200), () {
+          flutterTts.speak("Press the microphone button to start listening");
+        });
+      }
       _listen();
-      if (_isMute)
-        flutterTts.speak("Press the microphone button to start listening");
     } else if (NavBarState.controller.index == 0) {
       setState(() {
         _isMute = true;

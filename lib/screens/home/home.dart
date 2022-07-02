@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
   List<String> errorTexts = [
     "I'm sorry, can you speak again?",
     "Didn't get it right, can you say that again?",
-    "Can you please repeat that again?"
+    "Can you please repeat that again?",
   ];
 
   @override
@@ -30,8 +30,11 @@ class _HomePageState extends State<HomePage> {
     super.initState();
     NavBarState.changer.addListener(_listener);
     Future.delayed(const Duration(milliseconds: 1500), () {
+      flutterTts.stop();
       flutterTts.speak("Hey there! How can I help you?").then((value) {
-        _listen();
+        Future.delayed(Duration(milliseconds: 1500), () {
+          _listen();
+        });
       });
     });
   }
@@ -52,11 +55,17 @@ class _HomePageState extends State<HomePage> {
             _flag = false;
           }
         });
-      flutterTts.speak("Hey there! How can I help you?").then((value) {
-        _listen();
+
+      Future.delayed(Duration(milliseconds: 200), () {
+        flutterTts.speak("Hey there! How can I help you?").then((value) {
+          Future.delayed(Duration(milliseconds: 1500), () {
+            _listen();
+          });
+        });
       });
     } else if (NavBarState.controller.index == 2 && !_isMute && mounted)
       setState(() {
+        _height = 0;
         _isMute = true;
         _flag = true;
       });
@@ -157,31 +166,31 @@ class _HomePageState extends State<HomePage> {
                 SizedBox(
                   height: size.height * 0.12,
                 ),
-                if (!_isMute)
+                if (_height != 0)
                   CustomPaint(
                     painter: SoundPainter(
                       path: drawPath(_height),
                     ),
                   ),
-                if (!_isMute)
+                if (_height != 0)
                   CustomPaint(
                     painter: SoundPainter(
                       path: drawPath(_height / 2),
                     ),
                   ),
-                if (!_isMute)
+                if (_height != 0)
                   CustomPaint(
                     painter: SoundPainter(
                       path: drawPath(-_height / 2),
                     ),
                   ),
-                if (!_isMute)
+                if (_height != 0)
                   CustomPaint(
                     painter: SoundPainter(
                       path: drawPath(0.0),
                     ),
                   ),
-                if (!_isMute)
+                if (_height != 0)
                   CustomPaint(
                     painter: SoundPainter(
                       path: drawPath(-_height),
@@ -217,9 +226,11 @@ class _HomePageState extends State<HomePage> {
                   _text = errorTexts[0];
                 });
               }
+              flutterStt.stop();
               flutterTts.speak(errorTexts[0]).then((value) {
-                flutterStt.stop();
-                _listen();
+                Future.delayed(Duration(milliseconds: 2000), () {
+                  _listen();
+                });
               });
             });
           }
@@ -230,7 +241,7 @@ class _HomePageState extends State<HomePage> {
         flutterStt.listen(onSoundLevelChange: (sound) {
           if (mounted && sound != 10 && sound != -2)
             setState(() {
-              _height = sound * 10;
+              _height = sound * 5;
             });
         }, onResult: (val) async {
           if (mounted) {
@@ -277,14 +288,18 @@ class _HomePageState extends State<HomePage> {
                   .speak("Illusion is always at your service!")
                   .then((value) {
                 flutterStt.stop();
-                _listen();
+                Future.delayed(Duration(milliseconds: 1500), () {
+                  _listen();
+                });
               });
             } else if (_text.toLowerCase().contains("hi") ||
                 _text.toLowerCase().contains("hey") ||
                 _text.toLowerCase().contains("hello")) {
               flutterTts.speak("Hey there! How can I help you!").then((value) {
                 flutterStt.stop();
-                _listen();
+                Future.delayed(Duration(milliseconds: 1500), () {
+                  _listen();
+                });
               });
             } else if (_text.toLowerCase().contains("ok") ||
                 _text.toLowerCase().contains("yes")) {
@@ -300,10 +315,14 @@ class _HomePageState extends State<HomePage> {
                 }
                 flutterTts.speak(errorTexts[0]).then((value) {
                   flutterStt.stop();
-                  _listen();
+                  Future.delayed(Duration(milliseconds: 2000), () {
+                    _listen();
+                  });
                 });
               });
             }
+
+            NavBarState.changer.notify();
           }
         });
       }
@@ -339,9 +358,9 @@ class SoundPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // paint the line
     final paint = Paint()
-      ..color = Colors.white
+      ..color = Colours.primaryColor.withOpacity(0.3)
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.0;
+      ..strokeWidth = 1.0;
     canvas.drawPath(path, paint);
   }
 

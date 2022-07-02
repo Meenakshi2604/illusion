@@ -56,8 +56,8 @@ class NavBarState extends State<NavBar> {
         ),
         navBarStyle: NavBarStyle.style1,
         onItemSelected: (index) {
-          flutterTts.stop();
           flutterStt.stop();
+          flutterTts.stop();
           changer.notify();
         },
       ),

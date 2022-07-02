@@ -26,6 +26,7 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   @override
   void initState() {
     super.initState();
+    flutterTts.stop();
     flutterTts.speak('Type something and press the play button to speak');
     NavBarState.changer.addListener(_listener);
   }
@@ -37,8 +38,11 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
   }
 
   void _listener() {
-    if (NavBarState.controller.index == 3)
-      flutterTts.speak('Type something and press the play button to speak');
+    if (NavBarState.controller.index == 3) {
+      Future.delayed(Duration(milliseconds: 200), () {
+        flutterTts.speak('Type something and press the play button to speak');
+      });
+    }
   }
 
   @override

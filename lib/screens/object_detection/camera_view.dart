@@ -50,7 +50,9 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
-    flutterTts.speak(_text);
+    Future.delayed(Duration(milliseconds: 200), () {
+      flutterTts.speak(_text);
+    });
     Timer.periodic(const Duration(seconds: 5), (timer) {
       uniqueRecognitions.clear();
     });
