@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:illusion/main.dart';
+import 'package:illusion/screens/navbar/navbar.dart';
 import 'package:illusion/screens/object_detection/box_widget.dart';
 import 'package:illusion/services/recognition.dart';
 import 'camera_view.dart';
@@ -14,24 +16,52 @@ class ObjDetPage extends StatefulWidget {
 class _ObjDetPageState extends State<ObjDetPage> {
   /// Results to draw bounding boxes
   List<Recognition>? results;
+  bool flag = false;
+  GlobalKey key = GlobalKey();
 
-  /// Scaffold Key
-  GlobalKey<ScaffoldState> scaffoldKey = GlobalKey();
+  @override
+  void initState() {
+    super.initState();
+    NavBarState.changer.addListener(_listener);
+  }
+
+  @override
+  void dispose() {
+    NavBarState.changer.removeListener(_listener);
+    super.dispose();
+  }
+
+  void _listener() {
+    if (NavBarState.controller.index == 1 && mounted)
+      setState(() {
+        flag = true;
+      });
+    else if (flag) {
+      setState(() {
+        key = GlobalKey();
+        flag = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
+      key: key,
       backgroundColor: Colors.black,
-      body: Stack(
-        children: <Widget>[
-          // Camera View
-          CameraView(resultsCallback),
+      body: NavBarState.controller.index == 1
+          ? Stack(
+              children: <Widget>[
+                // Camera View
+                CameraView(resultsCallback),
 
-          // Bounding boxes
-          boundingBoxes(results),
-        ],
-      ),
+                // Bounding boxes
+                //boundingBoxes(results),
+              ],
+            )
+          : Container(
+              color: Colours.backgroundColor,
+            ),
     );
   }
 
@@ -61,24 +91,5 @@ class _ObjDetPageState extends State<ObjDetPage> {
         this.results = results;
       });
     }
-  }
-}
-
-/// Row for one Stats field
-class StatsRow extends StatelessWidget {
-  final String left;
-  final String right;
-
-  const StatsRow(this.left, this.right, {Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [Text(left), Text(right)],
-      ),
-    );
   }
 }

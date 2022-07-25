@@ -80,7 +80,7 @@ microwave
 oven
 toaster
 sink
-refrigerator
+wall
 ???
 book
 clock

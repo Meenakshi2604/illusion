@@ -3,7 +3,6 @@ import 'dart:isolate';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:illusion/main.dart';
-import 'package:illusion/screens/home/home.dart';
 import 'package:illusion/screens/object_detection/camera_view_singleton.dart';
 import 'package:illusion/services/classifier.dart';
 import 'package:illusion/services/isolate_utils.dart';
@@ -51,6 +50,9 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
+    Future.delayed(Duration(milliseconds: 200), () {
+      flutterTts.speak(_text);
+    });
     Timer.periodic(const Duration(seconds: 5), (timer) {
       uniqueRecognitions.clear();
     });
@@ -58,7 +60,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
   }
 
   void initStateAsync() async {
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
 
     // Spawn a new isolate
     isolateUtils = IsolateUtils();
@@ -98,11 +100,12 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
       // the display width of image on screen is
       // same as screenWidth while maintaining the aspectRatio
-      setState(() {
-        Size screenSize = MediaQuery.of(context).size;
-        CameraViewSingleton.screenSize = screenSize;
-        CameraViewSingleton.ratio = screenSize.width / screenSize.height;
-      });
+      if (mounted)
+        setState(() {
+          Size screenSize = MediaQuery.of(context).size;
+          CameraViewSingleton.screenSize = screenSize;
+          CameraViewSingleton.ratio = screenSize.width / screenSize.height;
+        });
     });
   }
 
@@ -115,52 +118,45 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
     Size size = MediaQuery.of(context).size;
 
-    return WillPopScope(
-      onWillPop: () async {
-        flutterTts.stop();
-        while (Navigator.canPop(context)) Navigator.pop(context);
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => HomePage()));
-        return true;
-      },
-      child: Scaffold(
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  AspectRatio(
-                      aspectRatio: 1.4 * (size.width / size.height),
-                      child: CameraPreview(cameraController!)),
-                  Center(
-                      child: Lottie.asset(
-                    "assets/robot.json",
-                    height: size.height * 0.2,
-                  )),
-                  Center(
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 30,
-                        right: 30,
-                      ),
-                      child: Text(
-                        _text,
-                        overflow: TextOverflow.clip,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.black45,
-                          fontSize: 22,
-                        ),
+    return Scaffold(
+      backgroundColor: Colours.backgroundColor,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                AspectRatio(
+                    aspectRatio: 1.5 * (size.width / size.height),
+                    child: CameraPreview(cameraController!)),
+                Center(
+                    child: Lottie.asset(
+                  "assets/robot.json",
+                  height: size.height * 0.15,
+                )),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 30,
+                      right: 30,
+                    ),
+                    child: Text(
+                      _text,
+                      overflow: TextOverflow.clip,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: _text == "Let's see what's in front of you"
+                            ? size.height * 0.020
+                            : size.height * 0.022,
+                        color: _text == "Let's see what's in front of you"
+                            ? Colors.black38
+                            : Colors.black87,
                       ),
                     ),
                   ),
-                  SizedBox(
-                    height: size.height * 0.05,
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -176,9 +172,10 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
         return;
       }
 
-      setState(() {
-        predicting = true;
-      });
+      if (mounted)
+        setState(() {
+          predicting = true;
+        });
 
       // Data to be passed to inference isolate
       var isolateData = IsolateData(
@@ -243,7 +240,7 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     cameraController!.dispose();
     super.dispose();
   }
