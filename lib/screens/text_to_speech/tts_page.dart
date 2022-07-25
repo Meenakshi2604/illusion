@@ -13,15 +13,8 @@ class TextToSpeechPage extends StatefulWidget {
 class _TextToSpeechPageState extends State<TextToSpeechPage> {
   final _textController = TextEditingController();
   bool _isReady = false;
-
+  bool _isFocused = false;
   String userPost = '';
-
-  speak() async {
-    await flutterTts.setLanguage("en-US");
-    await flutterTts.setPitch(1.3);
-    await flutterTts.setVolume(1.0);
-    await flutterTts.speak(userPost);
-  }
 
   @override
   void initState() {
@@ -54,13 +47,22 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
         FocusScopeNode currentFocus = FocusScope.of(context);
 
         if (!currentFocus.hasPrimaryFocus) {
+          _textController.clear();
           _isReady = false;
           currentFocus.unfocus();
+
+          Future.delayed(Duration(milliseconds: 200), () {
+            if (mounted)
+              setState(() {
+                _isFocused = false;
+              });
+          });
         }
       },
       child: SafeArea(
         child: Scaffold(
-          backgroundColor: Colours.backgroundColor,
+          backgroundColor:
+              isDark ? Colours.darkBackgroundColor : Colours.backgroundColor,
           body: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
@@ -73,13 +75,21 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                         "assets/robot.json",
                         height: size.height * 0.15,
                       ),
-                      Text(
-                        'Type something and press the play button to speak',
-                        overflow: TextOverflow.visible,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: size.height * 0.020,
-                          color: Colors.black38,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 30,
+                          right: 30,
+                        ),
+                        child: Text(
+                          'Type something and press the play button to speak',
+                          overflow: TextOverflow.visible,
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: size.height * 0.020,
+                            color: isDark
+                                ? Colours.darkTextColor.withOpacity(0.5)
+                                : Colours.textColor.withOpacity(0.5),
+                          ),
                         ),
                       ),
                       Container(
@@ -91,8 +101,10 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                               overflow: TextOverflow.visible,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 24,
-                                color: Colors.black87,
+                                fontSize: size.height * 0.024,
+                                color: isDark
+                                    ? Colours.darkTextColor
+                                    : Colours.textColor,
                               ),
                             ),
                           ),
@@ -105,50 +117,85 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
 
               //user input text field
               Padding(
-                padding: const EdgeInsets.all(30.0),
+                padding: EdgeInsets.only(
+                  top: size.height * 0.03,
+                  bottom: _isFocused ? size.height * 0.05 : size.height * 0.15,
+                  left: size.width * 0.05,
+                  right: size.width * 0.05,
+                ),
                 child: TextField(
                   textCapitalization: TextCapitalization.sentences,
                   controller: _textController,
+                  style: TextStyle(
+                    color: isDark ? Colours.darkTextColor : Colours.textColor,
+                  ),
                   onChanged: (text) {
                     if (text.trim().isNotEmpty && mounted)
                       setState(() {
                         _isReady = true;
                       });
+                    else if (mounted)
+                      setState(() {
+                        _isReady = false;
+                      });
+                  },
+                  onTap: () {
+                    if (mounted)
+                      setState(() {
+                        _isFocused = true;
+                      });
+                  },
+                  onSubmitted: (text) {
+                    Future.delayed(Duration(milliseconds: 200), () {
+                      if (mounted)
+                        setState(() {
+                          _isFocused = false;
+                        });
+                    });
                   },
                   decoration: InputDecoration(
                       border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colours.primaryColor),
+                        borderSide: BorderSide(
+                            color: isDark
+                                ? Colours.darkPrimaryColor
+                                : Colours.primaryColor),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.black26),
+                        borderSide: BorderSide(
+                          color: Colors.grey[700]!,
+                        ),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colours.primaryColor),
+                        borderSide: BorderSide(
+                            color: isDark
+                                ? Colours.darkPrimaryColor
+                                : Colours.primaryColor),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       suffixIcon: IconButton(
                           icon: Icon(
                             Icons.play_arrow_rounded,
-                            color: _isReady ? Colours.primaryColor : null,
+                            color: _isReady
+                                ? isDark
+                                    ? Colours.darkPrimaryColor
+                                    : Colours.primaryColor
+                                : Colors.grey[700],
                           ),
                           splashRadius: 20,
                           onPressed:
                               _isReady && _textController.text.trim().isNotEmpty
-                                  ? () {
+                                  ? () async {
                                       setState(() {
                                         userPost = _textController.text;
                                         _textController.clear();
                                         _isReady = false;
-                                        speak();
                                       });
+                                      await flutterTts.speak(userPost);
                                     }
                                   : null)),
                 ),
-              ),
-              SizedBox(
-                height: 30,
               ),
             ],
           ),

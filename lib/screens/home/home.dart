@@ -76,7 +76,8 @@ class _HomePageState extends State<HomePage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colours.backgroundColor,
+      backgroundColor:
+          isDark ? Colours.darkBackgroundColor : Colours.backgroundColor,
       body: SafeArea(
         child: SizedBox(
           height: MediaQuery.of(context).size.height,
@@ -92,16 +93,20 @@ class _HomePageState extends State<HomePage> {
                   child: Center(
                     child: Column(
                       children: [
-                        Text("Illusion",
-                            style: GoogleFonts.bebasNeue(
+                        Text("ILLUSION",
+                            style: GoogleFonts.lato(
                               letterSpacing: 5,
-                              color: Colours.primaryColor.withOpacity(0.8),
+                              color: isDark
+                                  ? Colours.darkPrimaryColor.withOpacity(0.8)
+                                  : Colours.primaryColor.withOpacity(0.8),
                               fontSize: size.height * 0.05,
                             )),
                         Text("Always At Your Service",
-                            style: GoogleFonts.bebasNeue(
+                            style: GoogleFonts.lato(
                               letterSpacing: 1,
-                              color: Colors.black.withOpacity(0.3),
+                              color: isDark
+                                  ? Colours.darkTextColor.withOpacity(0.5)
+                                  : Colours.textColor.withOpacity(0.5),
                               fontSize: size.height * 0.02,
                             )),
                       ],
@@ -126,20 +131,24 @@ class _HomePageState extends State<HomePage> {
                         overflow: TextOverflow.visible,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.black45,
-                          fontSize: size.height * 0.0225,
+                          color: isDark
+                              ? Colours.darkTextColor
+                              : Colours.textColor,
+                          fontSize: size.height * 0.022,
                         ),
                       ),
                     ),
                   ),
                 ),
                 SizedBox(
-                  height: size.height * 0.01,
+                  height: size.height * 0.015,
                 ),
                 Center(
                   child: AvatarGlow(
                     animate: !_isMute,
-                    glowColor: Colors.indigoAccent,
+                    glowColor: isDark
+                        ? Colours.darkPrimaryColor
+                        : Colours.primaryColor,
                     endRadius: size.height * 0.05,
                     duration: const Duration(milliseconds: 2000),
                     repeatPauseDuration: const Duration(milliseconds: 100),
@@ -150,13 +159,19 @@ class _HomePageState extends State<HomePage> {
                         size: size.height * 0.03,
                         color: Colors.white54,
                       ),
-                      backgroundColor: _isMute
-                          ? Colours.primaryColor.withOpacity(.5)
-                          : Colours.primaryColor.withOpacity(.35),
+                      backgroundColor: isDark
+                          ? _isMute
+                              ? Colours.darkPrimaryColor.withOpacity(.35)
+                              : Colours.darkPrimaryColor.withOpacity(.75)
+                          : _isMute
+                              ? Colours.primaryColor.withOpacity(.5)
+                              : Colours.primaryColor.withOpacity(.35),
                       onPressed: () {
                         setState(() {
                           _isMute = !_isMute;
                         });
+
+                        if (_isMute) flutterTts.stop();
 
                         _listen();
                       },
@@ -358,7 +373,9 @@ class SoundPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     // paint the line
     final paint = Paint()
-      ..color = Colours.primaryColor.withOpacity(0.3)
+      ..color = isDark
+          ? Colours.darkPrimaryColor.withOpacity(.3)
+          : Colours.primaryColor.withOpacity(.3)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 1.0;
     canvas.drawPath(path, paint);

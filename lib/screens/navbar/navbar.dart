@@ -22,45 +22,52 @@ class NavBarState extends State<NavBar> {
   static Changer changer = Changer();
 
   @override
+  void initState() {
+    super.initState();
+    changer.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colours.backgroundColor,
-      child: PersistentTabView(
-        context,
-        controller: controller,
-        margin: EdgeInsets.all(20),
-        padding: NavBarPadding.all(10),
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        confineInSafeArea: true,
-        backgroundColor: Colors.white12,
-        navBarHeight: 80,
-        handleAndroidBackButtonPress: true,
-        resizeToAvoidBottomInset: true,
-        stateManagement: true,
-        hideNavigationBarWhenKeyboardShows: true,
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(10.0),
-          colorBehindNavBar: Colors.transparent,
-        ),
-        popAllScreensOnTapOfSelectedTab: true,
-        popActionScreens: PopActionScreensType.all,
-        itemAnimationProperties: ItemAnimationProperties(
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: ScreenTransitionAnimation(
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle: NavBarStyle.style1,
-        onItemSelected: (index) {
-          flutterStt.stop();
-          flutterTts.stop();
-          changer.notify();
-        },
+    return PersistentTabView(
+      context,
+      controller: controller,
+      margin: EdgeInsets.all(20),
+      padding: NavBarPadding.all(10),
+      screens: _buildScreens(),
+      items: _navBarsItems(),
+      confineInSafeArea: true,
+      backgroundColor: isDark ? Colors.black12 : Colors.white12,
+      navBarHeight: 70,
+      bottomScreenMargin: 0,
+      handleAndroidBackButtonPress: true,
+      resizeToAvoidBottomInset: true,
+      stateManagement: true,
+      hideNavigationBarWhenKeyboardShows: true,
+      decoration: NavBarDecoration(
+        borderRadius: BorderRadius.circular(10.0),
+        colorBehindNavBar:
+            isDark ? Colours.darkBackgroundColor : Colours.backgroundColor,
       ),
+      popAllScreensOnTapOfSelectedTab: true,
+      popActionScreens: PopActionScreensType.all,
+      itemAnimationProperties: ItemAnimationProperties(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.ease,
+      ),
+      screenTransitionAnimation: ScreenTransitionAnimation(
+        animateTabTransition: true,
+        curve: Curves.ease,
+        duration: Duration(milliseconds: 200),
+      ),
+      navBarStyle: NavBarStyle.style1,
+      onItemSelected: (index) {
+        flutterStt.stop();
+        flutterTts.stop();
+        changer.notify();
+      },
     );
   }
 
@@ -79,31 +86,36 @@ class NavBarState extends State<NavBar> {
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.home),
         title: ("Home"),
-        activeColorPrimary: Colours.primaryColor,
+        activeColorPrimary:
+            isDark ? Colours.darkPrimaryColor : Colours.primaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.camera),
         title: ("See"),
-        activeColorPrimary: Colours.primaryColor,
+        activeColorPrimary:
+            isDark ? Colours.darkPrimaryColor : Colours.primaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.mic),
         title: ("Listen"),
-        activeColorPrimary: Colours.primaryColor,
+        activeColorPrimary:
+            isDark ? Colours.darkPrimaryColor : Colours.primaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.speaker_3),
         title: ("Speak"),
-        activeColorPrimary: Colours.primaryColor,
+        activeColorPrimary:
+            isDark ? Colours.darkPrimaryColor : Colours.primaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
       PersistentBottomNavBarItem(
         icon: Icon(CupertinoIcons.settings),
         title: ("Settings"),
-        activeColorPrimary: Colours.primaryColor,
+        activeColorPrimary:
+            isDark ? Colours.darkPrimaryColor : Colours.primaryColor,
         inactiveColorPrimary: CupertinoColors.systemGrey,
       ),
     ];

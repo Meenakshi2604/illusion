@@ -119,7 +119,8 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colours.backgroundColor,
+      backgroundColor:
+          isDark ? Colours.darkBackgroundColor.withOpacity(0.1) : Colours.backgroundColor,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -129,11 +130,13 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
               children: [
                 AspectRatio(
                     aspectRatio: 1.5 * (size.width / size.height),
-                    child: CameraPreview(cameraController!)),
+                    child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20.0),
+                        child: CameraPreview(cameraController!))),
                 Center(
                     child: Lottie.asset(
                   "assets/robot.json",
-                  height: size.height * 0.15,
+                  height: size.height * 0.14,
                 )),
                 Center(
                   child: Padding(
@@ -147,15 +150,17 @@ class _CameraViewState extends State<CameraView> with WidgetsBindingObserver {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: _text == "Let's see what's in front of you"
-                            ? size.height * 0.020
-                            : size.height * 0.022,
-                        color: _text == "Let's see what's in front of you"
-                            ? Colors.black38
-                            : Colors.black87,
+                            ? size.height * 0.018
+                            : size.height * 0.020,
+                        color:
+                            isDark ? Colours.darkTextColor : Colours.textColor,
                       ),
                     ),
                   ),
                 ),
+                SizedBox(
+                  height: size.height * 0.11,
+                )
               ],
             ),
           ),

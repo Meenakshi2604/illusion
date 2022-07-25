@@ -52,15 +52,18 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      backgroundColor: Colours.backgroundColor,
+      backgroundColor:
+          isDark ? Colours.darkBackgroundColor : Colours.backgroundColor,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Padding(
-        padding: const EdgeInsets.only(
-          bottom: 20,
+        padding: EdgeInsets.only(
+          bottom: size.height * 0.1,
         ),
         child: AvatarGlow(
           animate: !_isMute,
-          glowColor: Colors.indigoAccent,
+          glowColor: isDark
+              ? Colours.darkPrimaryColor.withOpacity(.5)
+              : Colours.primaryColor.withOpacity(.5),
           endRadius: size.height * 0.05,
           duration: const Duration(milliseconds: 2000),
           repeatPauseDuration: const Duration(milliseconds: 100),
@@ -71,9 +74,13 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
               size: size.height * 0.03,
               color: Colors.white54,
             ),
-            backgroundColor: _isMute
-                ? Colours.primaryColor.withOpacity(.5)
-                : Colours.primaryColor.withOpacity(.35),
+            backgroundColor: isDark
+                ? _isMute
+                    ? Colours.darkPrimaryColor.withOpacity(.5)
+                    : Colours.darkPrimaryColor.withOpacity(.35)
+                : _isMute
+                    ? Colours.primaryColor.withOpacity(.5)
+                    : Colours.primaryColor.withOpacity(.35),
             onPressed: () {
               if (mounted)
                 setState(() {
@@ -117,7 +124,9 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: size.height * 0.020,
-                        color: Colors.black38,
+                        color: isDark
+                            ? Colours.darkTextColor.withOpacity(0.5)
+                            : Colours.textColor.withOpacity(0.75),
                       ),
                     ),
                   ),
@@ -137,7 +146,9 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
                         bottom: 20,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: isDark
+                            ? Colours.darkBackgroundColor.withOpacity(0.25)
+                            : Colors.white.withOpacity(0.25),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
@@ -145,14 +156,16 @@ class _SpeechToTextPageState extends State<SpeechToTextPage> {
                         textAlign: TextAlign.end,
                         style: TextStyle(
                           fontSize: size.height * 0.022,
-                          color: Colors.black87,
+                          color: isDark
+                              ? Colours.darkTextColor
+                              : Colours.textColor,
                         ),
                       ),
                     ),
                   ),
                 if (_texts.isEmpty || index == 0)
                   SizedBox(
-                    height: size.height * 0.1,
+                    height: size.height * 0.2,
                   ),
               ],
             ),

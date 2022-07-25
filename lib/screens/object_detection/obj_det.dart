@@ -48,7 +48,7 @@ class _ObjDetPageState extends State<ObjDetPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: key,
-      backgroundColor: Colors.black,
+      backgroundColor: isDark ? Colours.darkBackgroundColor : Colours.backgroundColor,
       body: NavBarState.controller.index == 1
           ? Stack(
               children: <Widget>[
@@ -60,7 +60,9 @@ class _ObjDetPageState extends State<ObjDetPage> {
               ],
             )
           : Container(
-              color: Colours.backgroundColor,
+              color: isDark
+                  ? Colours.darkBackgroundColor
+                  : Colours.backgroundColor,
             ),
     );
   }
