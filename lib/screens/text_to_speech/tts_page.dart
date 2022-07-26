@@ -53,8 +53,6 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
           if (!currentFocus.hasPrimaryFocus) {
-            _textController.clear();
-            _isReady = false;
             currentFocus.unfocus();
 
             Future.delayed(Duration(milliseconds: 200), () {
@@ -72,7 +70,6 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
             body: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                //display text
                 Flexible(
                   child: Center(
                     child: Column(
@@ -98,10 +95,11 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                             ),
                           ),
                         ),
-                        Container(
+                        Flexible(
                           child: Padding(
                             padding: EdgeInsets.all(20.0),
                             child: SingleChildScrollView(
+                              physics: BouncingScrollPhysics(),
                               child: Text(
                                 userPost,
                                 overflow: TextOverflow.visible,
@@ -120,11 +118,9 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                     ),
                   ),
                 ),
-
-                //user input text field
                 Padding(
                   padding: EdgeInsets.only(
-                    top: size.height * 0.03,
+                    top: 0,
                     bottom: size.height * _padding,
                     left: size.width * 0.05,
                     right: size.width * 0.05,
