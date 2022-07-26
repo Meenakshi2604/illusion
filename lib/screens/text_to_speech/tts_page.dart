@@ -147,13 +147,24 @@ class _TextToSpeechPageState extends State<TextToSpeechPage> {
                           _padding = 0.01;
                         });
                     },
-                    onSubmitted: (text) {
-                      Future.delayed(Duration(milliseconds: 200), () {
-                        if (mounted)
-                          setState(() {
-                            _padding = 0.12;
-                          });
-                      });
+                    onSubmitted: (text) async {
+                      // Future.delayed(Duration(milliseconds: 200), () {
+                      //   if (mounted)
+                      //     setState(() {
+                      //       _padding = 0.12;
+                      //     });
+                      // });
+                      if (_isReady && _textController.text.trim().isNotEmpty)
+                        setState(() {
+                          userPost = _textController.text;
+                          _textController.clear();
+                          _isReady = false;
+                        });
+                      flutterTts.setVolume(1);
+                      await flutterTts.speak(userPost);
+                      if (!assistantOn) {
+                        flutterTts.setVolume(0);
+                      }
                     },
                     decoration: InputDecoration(
                         border: OutlineInputBorder(
