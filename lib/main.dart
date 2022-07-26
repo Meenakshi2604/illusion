@@ -21,6 +21,12 @@ void main() async {
   isDark = await prefs.getBool('isDark') ?? false;
 
   assistantOn = await prefs.getBool('assistantOn') ?? true;
+  
+  if (assistantOn) {
+    flutterTts.setVolume(1);
+  } else {
+    flutterTts.setVolume(0);
+  }
 
   runApp(const MyApp());
 }
@@ -34,7 +40,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Illusion',
       theme: ThemeData(
-        backgroundColor: isDark ? Colours.darkBackgroundColor : Colours.backgroundColor,
+        backgroundColor:
+            isDark ? Colours.darkBackgroundColor : Colours.backgroundColor,
         primaryColor: Colours.primaryColor,
         textTheme: GoogleFonts.poppinsTextTheme(
           Theme.of(context).textTheme,

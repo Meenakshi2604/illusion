@@ -113,6 +113,11 @@ class _SettingsPageState extends State<SettingsPage> {
                               .setBool('assistantOn', val);
                           setState(() {
                             assistantOn = val;
+                            if (assistantOn) {
+                              flutterTts.setVolume(1);
+                            } else {
+                              flutterTts.setVolume(0);
+                            }
                           });
                           NavBarState.changer.notify();
                         },

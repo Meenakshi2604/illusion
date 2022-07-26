@@ -28,6 +28,7 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _isMute = !assistantOn;
     NavBarState.changer.addListener(_listener);
     Future.delayed(const Duration(milliseconds: 1500), () {
       flutterTts.stop();
@@ -46,8 +47,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   void _listener() {
+    if (assistantOn) {
+      _isMute = false;
+    } else {
+      _height = 0;
+      _isMute = true;
+    }
     if (NavBarState.controller.index == 0) {
-      if (mounted)
+      if (mounted && assistantOn)
         setState(() {
           _text = "Hey there! 👋\nHow can I help you?";
           if (_flag) {
@@ -55,6 +62,10 @@ class _HomePageState extends State<HomePage> {
             _flag = false;
           }
         });
+      else if (mounted && !assistantOn) {
+        _text = "I am currently down \nPlease turn me on";
+        _isMute = true;
+      }
 
       Future.delayed(Duration(milliseconds: 200), () {
         flutterTts.speak("Hey there! How can I help you?").then((value) {
@@ -63,7 +74,10 @@ class _HomePageState extends State<HomePage> {
           });
         });
       });
-    } else if (NavBarState.controller.index == 2 && !_isMute && mounted)
+    } else if (NavBarState.controller.index == 2 &&
+        !_isMute &&
+        mounted &&
+        assistantOn)
       setState(() {
         _height = 0;
         _isMute = true;
@@ -168,7 +182,9 @@ class _HomePageState extends State<HomePage> {
                               : Colours.primaryColor.withOpacity(.35),
                       onPressed: () {
                         setState(() {
-                          _isMute = !_isMute;
+                          if (assistantOn) {
+                            _isMute = !_isMute;
+                          }
                         });
 
                         if (_isMute) flutterTts.stop();
@@ -293,7 +309,7 @@ class _HomePageState extends State<HomePage> {
                 _text.toLowerCase().contains("quit") ||
                 _text.toLowerCase().contains("bye") ||
                 _text.toLowerCase().contains("no")) {
-              if (mounted)
+              if (mounted && !assistantOn)
                 setState(() {
                   _isMute = true;
                   flutterStt.stop();
@@ -342,11 +358,13 @@ class _HomePageState extends State<HomePage> {
         });
       }
     } else {
-      if (mounted) {
+      if (mounted && assistantOn) {
         setState(() {
           _text = "Hey there! 👋\nHow can I help you?";
           _height = 0;
         });
+      } else {
+        _text = "I am currently down \nPlease turn me on";
       }
       flutterStt.stop();
     }
