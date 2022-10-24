@@ -18,13 +18,6 @@ The product is a culmination of various ideas. It is an all-in-one app that targ
 - Voice assistant
 - Dark mode
 
-## Requirements
-
-- Works on all Android phones
-- Android API level should be above 21
-- Must require a good microphone, speaker and camera
-- Does not require Internet connectivity
-
 ## How to use
 
 Home-page acts as the common page from which the user directs the control to any other tab. The home-page takes the user to four different tabs namely: Help me see, Help me speak, Help me hear and Settings.
@@ -35,6 +28,13 @@ There is also a voice assistant feature that is kept ON by default when the user
 Help me speak tab is used for text to speech conversion. The English language is used for conversation. This feature mainly targets to help the mute population.
 
 Help me hear tab is used to convert English speech to text. The conversion works for English language and thus English words or sounds are converted to text.
+
+## Requirements
+
+- Works on all Android phones
+- Android API level should be above 21
+- Must require a good microphone, speaker and camera
+- Does not require Internet connectivity
 
 ## Screenshots
 
