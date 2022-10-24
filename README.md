@@ -10,14 +10,6 @@ The product is a culmination of various ideas. It is an all-in-one app that targ
 2. Speechless users
 3. Hearing-impaired users
 
-## Features
-
-- Object detection
-- Text to speech
-- Speech to text
-- Voice assistant
-- Dark mode
-
 ## How to use
 
 Home-page acts as the common page from which the user directs the control to any other tab. The home-page takes the user to four different tabs namely: See, Listen, Speak and Settings.
@@ -28,6 +20,14 @@ There is also a voice assistant feature that is kept ON by default when the user
 Listen tab is used to convert English speech to text. The conversion works for English language and thus English words or sounds are converted to text.
 
 Speak tab is used for text to speech conversion. The English language is used for conversation. This feature mainly targets to help the mute population.
+
+## Features
+
+- Object detection
+- Text to speech
+- Speech to text
+- Voice assistant
+- Dark mode
 
 ## Requirements
 
@@ -43,6 +43,40 @@ Speak tab is used for text to speech conversion. The English language is used fo
 <img src="screenshots/5.jpeg" width="200"> <img src="screenshots/6.jpeg" width="200"> 
 <img src="screenshots/7.jpeg" width="200"> <img src="screenshots/8.jpeg" width="200">
 
-## The team
+## Developers
+
+<table>
+<tr>
+<td align="center">
+<a href="https://github.com/amalnathm7" align="center">
+  <img src="https://avatars.githubusercontent.com/u/64605131?v=4" width="100px;" alt=""/>
+  <br>
+  <sub>Amal Nath</sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/Meenakshi2604/" align="center">
+  <img src="https://avatars.githubusercontent.com/u/62795103?v=4" width="100px;" alt=""/>
+  <br>
+  <sub>Meenakshi Nair</sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/sinad-shibin" align="center">
+  <img src="https://avatars.githubusercontent.com/u/59430074?v=4" width="100px;" alt=""/>
+  <br>
+  <sub>Sinadin Shibin</sub>
+</a>
+</td>
+<td align="center">
+<a href="" align="center">
+  <img src="" width="100px;" alt=""/>
+  <br>
+  <sub>Abdul Basith</sub>
+</a>
+</td>
+</tr>
+</table>
+<br>
 
 This project helped us to develop a spirit of teamwork and work towards the well-being of the society. It made us understand the problems faced by the differently abled population and the need to empower them by making them independent and self-confident.
