@@ -20,14 +20,14 @@ The product is a culmination of various ideas. It is an all-in-one app that targ
 
 ## How to use
 
-Home-page acts as the common page from which the user directs the control to any other tab. The home-page takes the user to four different tabs namely: Help me see, Help me speak, Help me hear and Settings.
+Home-page acts as the common page from which the user directs the control to any other tab. The home-page takes the user to four different tabs namely: See, Listen, Speak and Settings.
 
-Help me see tab helps in detecting objects at a particular distance and warn the user about it. This feature mainly helps the blind users. It allows them to detect objects within a certain parameter.
+See tab helps in detecting objects at a particular distance and warn the user about it. This feature mainly helps the blind users. It allows them to detect objects within a certain parameter.
 There is also a voice assistant feature that is kept ON by default when the user opens the application for the first time. It works on the basis of a few commands to navigate between the tabs.
 
-Help me speak tab is used for text to speech conversion. The English language is used for conversation. This feature mainly targets to help the mute population.
+Listen tab is used to convert English speech to text. The conversion works for English language and thus English words or sounds are converted to text.
 
-Help me hear tab is used to convert English speech to text. The conversion works for English language and thus English words or sounds are converted to text.
+Speak tab is used for text to speech conversion. The English language is used for conversation. This feature mainly targets to help the mute population.
 
 ## Requirements
 
@@ -41,7 +41,7 @@ Help me hear tab is used to convert English speech to text. The conversion works
 <img src="screenshots/1.jpeg" width="200"> <img src="screenshots/2.jpeg" width="200"> 
 <img src="screenshots/3.jpeg" width="200"> <img src="screenshots/4.jpeg" width="200"> 
 <img src="screenshots/5.jpeg" width="200"> <img src="screenshots/6.jpeg" width="200"> 
-<img src="screenshots/7.jpeg" width="200">
+<img src="screenshots/7.jpeg" width="200"> <img src="screenshots/8.jpeg" width="200">
 
 ## The team
 
