@@ -5,18 +5,10 @@
 _Illusion: Mobile Application for Differently Abled_ was developed as part of the Mini Project course under Kerala Technological University. The inspiration behind taking up this particular topic was after researching about the problems faced by the blind people in our country. Our aim was to build a mobile application for a social cause. Hence, the idea of _Illusion_ was formulated.
 
 ## Product
-The product is a culmination of various ideas. It is an all-in-one app that targets the disabled individuals. The primary users of _Illusion_ are categorised into three:
+The product is a culmination of various ideas. It is an all-in-one app that targets the differently-abled individuals. The primary users of _Illusion_ are categorised into three:
 1. Visually-impaired users
 2. Speechless users
 3. Hearing-impaired users
-
-## Features
-
-- Object detection
-- Text to speech
-- Speech to text
-- Voice assistant
-- Dark mode
 
 ## How to use
 
@@ -28,6 +20,14 @@ There is also a voice assistant feature that is kept ON by default when the user
 Listen tab is used to convert English speech to text. The conversion works for English language and thus English words or sounds are converted to text.
 
 Speak tab is used for text to speech conversion. The English language is used for conversation. This feature mainly targets to help the mute population.
+
+## Features
+
+- Object detection
+- Text to speech
+- Speech to text
+- Voice assistant
+- Dark mode
 
 ## Requirements
 
@@ -43,6 +43,40 @@ Speak tab is used for text to speech conversion. The English language is used fo
 <img src="screenshots/5.jpeg" width="200"> <img src="screenshots/6.jpeg" width="200"> 
 <img src="screenshots/7.jpeg" width="200"> <img src="screenshots/8.jpeg" width="200">
 
-## The team
+## Developers
+
+<table>
+<tr>
+<td align="center">
+<a href="https://github.com/amalnathm7" align="center">
+  <img src="https://avatars.githubusercontent.com/u/64605131?v=4" width="100px;" alt=""/>
+  <br>
+  <sub>Amal Nath</sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/Meenakshi2604/" align="center">
+  <img src="https://avatars.githubusercontent.com/u/62795103?v=4" width="100px;" alt=""/>
+  <br>
+  <sub>Meenakshi Nair</sub>
+</a>
+</td>
+<td align="center">
+<a href="https://github.com/sinad-shibin" align="center">
+  <img src="https://avatars.githubusercontent.com/u/59430074?v=4" width="100px;" alt=""/>
+  <br>
+  <sub>Sinadin Shibin</sub>
+</a>
+</td>
+<td align="center">
+<a href="" align="center">
+  <img src="" width="100px;" alt=""/>
+  <br>
+  <sub>Abdul Basith</sub>
+</a>
+</td>
+</tr>
+</table>
+<br>
 
 This project helped us to develop a spirit of teamwork and work towards the well-being of the society. It made us understand the problems faced by the differently abled population and the need to empower them by making them independent and self-confident.
