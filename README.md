@@ -5,7 +5,7 @@
 _Illusion: Mobile Application for Differently Abled_ was developed as part of the Mini Project course under Kerala Technological University. The inspiration behind taking up this particular topic was after researching about the problems faced by the blind people in our country. Our aim was to build a mobile application for a social cause. Hence, the idea of _Illusion_ was formulated.
 
 ## Product
-The product is a culmination of various ideas. It is an all-in-one app that targets the disabled individuals. The primary users of _Illusion_ are categorised into three:
+The product is a culmination of various ideas. It is an all-in-one app that targets the differently-abled individuals. The primary users of _Illusion_ are categorised into three:
 1. Visually-impaired users
 2. Speechless users
 3. Hearing-impaired users
